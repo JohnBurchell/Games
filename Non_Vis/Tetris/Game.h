@@ -20,6 +20,5 @@ public:
 	void Update();
 	void Draw();
 	void DrawBoard();
-	void DropPieces();
-	void StopShape(Tetris_Shape &shape);
+	void Input(); // Gets user input.
 };

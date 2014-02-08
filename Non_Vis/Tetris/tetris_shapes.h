@@ -25,3 +25,10 @@ public:
 	Straight();
 
 };
+
+class ZShape : public Tetris_Shape {
+
+public:	
+	ZShape();
+
+};

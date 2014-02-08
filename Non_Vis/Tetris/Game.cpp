@@ -5,10 +5,12 @@
 const int windowHeight = 800, windowWidth = 600;
 const int tileSize = 32;
 
+void draw_shape(Tetris_Shape &shape);
+
 Game::Game(){
 
 	window.create(sf::VideoMode(windowWidth,windowHeight), "Tetris Clone, Version 1");
-	window.setFramerateLimit(10);
+	window.setFramerateLimit(5);
 	window.clear(sf::Color::Black);
 	window.display();
 
@@ -16,14 +18,16 @@ Game::Game(){
 	//TODO Add rest of the shapes to the container.
 	Cube cube;
 	Straight straight;
-
+	ZShape zShape;
 
 	//TODO - Maybe have this init done somewhere else?
 	std::vector<Tetris_Shape> shapes;
 	shapes.push_back(cube);
 	shapes.push_back(straight);
+	shapes.push_back(zShape);
 
-	boardObj.create_board2();
+
+	boardObj.create_board();
 }
 
 void Game::Run() {
@@ -34,9 +38,13 @@ void Game::Run() {
 
 	Cube cube;
 	Straight straight;
-	boardObj.setPiece(straight);
+	ZShape zShape;
+	draw_shape(zShape);
+
+	boardObj.setPiece(zShape);
 
 	while(playing) {
+		Input();
 		Draw();
 		Update();
 	}
@@ -51,9 +59,9 @@ void Game::DrawBoard() {
 
 	for(int i = 0; i < 16; i++) {
 		for(int j = 0; j < 16; j++) {
-			if(boardObj.board2[i][j].filled) {
-				boardObj.board2[i][j].piece.setPosition(j*tileSize, i*tileSize);
-				window.draw(boardObj.board2[i][j].piece);
+			if(boardObj.board[i][j].filled) {
+				boardObj.board[i][j].piece.setPosition(j*tileSize, i*tileSize);
+				window.draw(boardObj.board[i][j].piece);
 			}
 		}
 	}
@@ -61,24 +69,37 @@ void Game::DrawBoard() {
 
 void Game::Update() {
 	window.clear(sf::Color::Black);
-	DropPieces();
+	boardObj.updateBoard();
+	boardObj.dropPieces();
 }
 
-void Game::DropPieces() {
 
-	BlankPiece blank;
-	for(int i = 14; i >= 0; i--) {
-		for(int j = 15; j >= 0; j--) {
-			if(boardObj.board2[i][j].filled && boardObj.board2[i][j].isFalling) {
-				boardObj.board2[i+1][j] = boardObj.board2[i][j];
-				boardObj.board2[i][j] = blank;
-			}
-			if(boardObj.board2[i][j].filled && !boardObj.board2[i][j].isFalling)
-				std::cout << "i am a stopped brick" << std::endl;
+void Game::Input() {
+	/*Handles the input, moving and rotating shpaes when need be.*/
+
+    sf::Event event;
+    while(window.pollEvent(event))
+    {
+        if(event.type == sf::Event::Closed)
+        {
+            window.close();
+            exit(1);
+        }
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        	exit(1);
+    }
+}
+
+
+void draw_shape(Tetris_Shape &shape){
+
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			std::cout << shape.layout[i][j];
 		}
-	}
-}
 
-void Game::StopShape(Tetris_Shape &shape) {
-	//TODO - Make it so that it searches or finds the shape parts and stops them from falling.
+		std::cout << " " << std::endl;
+	}
+
 }

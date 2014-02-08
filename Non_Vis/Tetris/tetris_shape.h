@@ -14,6 +14,11 @@ public:
 	int x,y;
 	//Vector to hold it's layout
 	std::vector< std::vector<int> > layout;
+	std::vector< std::vector<int> > rotatedLayout;
+
+
+	//Not using vectors for now, don't know how to use a 3d properly.
+	//Perhaps refactor this at a later date.
 	//A piece to hold the colour of the piece and to make it drawable.
 	sf::RectangleShape piece;
 
@@ -23,7 +28,8 @@ public:
 		//Initialize starting values.
 		isFalling(false),
 		filled(false),
-		layout(4, std::vector<int>(2)),
+		layout(4, std::vector<int>(4)),
+		rotatedLayout(4, std::vector<int>(4)),
 		size(30.f)
 	{}
 };
