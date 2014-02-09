@@ -40,7 +40,7 @@ void Game::run() {
 	Straight straight;
 	ZShape zShape;
 	draw_shape(zShape);
-
+	boardObj.activeShape = &zShape;
 	boardObj.setPiece(zShape);
 
 	while(playing) {

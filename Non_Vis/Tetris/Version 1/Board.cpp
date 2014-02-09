@@ -1,8 +1,7 @@
 #include "Board.h"
 
-void Board::create_board() {
 
-	BlankPiece blank;
+void Board::create_board() {
 
 	for(int i = 0; i < 16; i++) {
 		for(int j = 0; j < 16; j++) {
@@ -27,10 +26,13 @@ void Board::setPiece(Tetris_Shape &shape) {
 
 void Board::stopRow(int i) {
 	//TODO - Make it so that it searches or finds the shape parts and stops them from falling.
-	std::cout << "Stopping row " << i << std::endl;
-	for(int j = 0; j < 15; j++){
-		board[i][j].isFalling = false;
+	for(int i = 0; i < 16; i++){
+		for(int j = 0; j < 16; j++){
+			board[i][j].isFalling = false;
+		}
 	}
+
+	activeShape = &blank;
 }
 
 void Board::dropPieces() {
@@ -38,7 +40,6 @@ void Board::dropPieces() {
 
 	//TO-DO: 9th feb: Z and S shapes drop an extra block, fix!
 	//Perhaps stop WHOLE line instead.
-	BlankPiece blank;
 	for(int i = 15; i >= 0; i--) {
 		for(int j = 15; j >= 0; j--) {
 			//If falling and filled, moving
@@ -82,14 +83,12 @@ void Board::updateBoard(){
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 
 		std::cout << "Up was pressed " << std::endl;
-		rotatePiece();
+		rotatePiece(activeShape);
 	}
 }
 
 void Board::moveRight(){
 	//Move right
-	BlankPiece blank;
-
 	for(int i = 15; i >= 0; i--) {
 		for(int j = 15; j >= 0; j--) {
 			if(board[i][j].isFalling && board[i][j].filled){
@@ -104,8 +103,6 @@ void Board::moveRight(){
 
 void Board::moveLeft(){
 	//Move left
-	BlankPiece blank;
-
 	for(int i = 15; i >= 0; i--) {
 		for(int j = 15; j >= 0; j--) {
 			if(isActive(i, j)){
@@ -129,29 +126,35 @@ bool Board::isActive(int i, int j){
 	return (board[i][j].isFalling && board[i][j].filled);
 }
 
-void Board::rotatePiece(){
+void Board::rotatePiece(Tetris_Shape *shape){
 
+	//This is one of the worst things i think i've ever written.
+	//Fuck this shit.
+	
 	//Find current active shapes that aren't the pivot
 	//Make them blank.
 	//Read rotated shape in?
-	int temp[4][4] = {{0}};
-	int block_i = 0, block_j = 0;
+
+	int previous_column, previous_row;
+	int temp[4][4];
 	int temp2[4][4] = {{0}};
 
-	//Find the offset where it's located in the main board.
-	int location[1][1] = {{0}};
-
-	temp[1][0] = 1;
-	temp[1][1] = 1;
-	temp[2][1] = 2;
-	temp[2][2] = 1;
-
+	//Get current shape layout.
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
-			std::cout << temp[i][j];
+			temp[i][j] = shape->layout[i][j];
 		}
+	}
 
-		std::cout << " " << std::endl;
+	//Find where it starts on the board
+	for(int i = 0; i < 16; i++){
+		for(int j = 0; j < 16; j++){
+			if(isActive(i,j)){
+				previous_column = i;
+				previous_row = j;
+				break;
+			}
+		}
 	}
 
 
@@ -166,12 +169,33 @@ void Board::rotatePiece(){
 		std::cout << "---Rotated---" << std::endl;
 
 
+	//Clear all currently falling shapes
+	for(int i = 0; i < 16; i++){
+		for(int j = 0; j < 16; j++){
+			if(isActive(i,j)){
+				board[i][j].isFalling = false;
+				board[i][j].filled = false;
+			}
+		}
+	}
+
+	//Re-assign new positions - Add collision checks here later
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
+			if(temp2[i][j] >= 1){
+				shape->isFalling = true;
+				shape->filled = true;
+				board[previous_column + i][previous_row + j] = *shape;
+			}
+		}	
+	}
+
+
+	//Change the layout in the current shape for further rotates.
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
-			std::cout << temp2[i][j];
+			shape->layout[i][j] = temp2[i][j];
 		}
-
-		std::cout << " " << std::endl;
 	}
 }
 

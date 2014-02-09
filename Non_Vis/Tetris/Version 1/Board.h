@@ -5,13 +5,15 @@ struct Board {
 	std::vector< std::vector<Tetris_Shape> > board;
 	sf::RectangleShape Blank_Shape;
 	Tetris_Shape *activeShape;
+	BlankPiece blank;
+	
 
 	int board2[16][16];
 
 	void create_board();
 	void CreateIntBoard();
 	void setPiece(Tetris_Shape &shape);
-	void rotatePiece();
+	void rotatePiece(Tetris_Shape *shape);
 	void stopRow(int i);
 	void moveRight();
 	void moveLeft();
