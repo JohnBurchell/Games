@@ -21,10 +21,13 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tetris_shapes.cpp">
+    <ClCompile Include="Board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Board.cpp">
+    <ClCompile Include="TetrisShapes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TetrisShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +35,13 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tetris_shape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tetris_shapes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisShapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

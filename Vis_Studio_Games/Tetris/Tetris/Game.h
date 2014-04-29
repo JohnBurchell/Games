@@ -1,25 +1,69 @@
-#include <SFML/Graphics.hpp>
-#include "Board.h"
+#ifndef Game_H
+#define Game_H
 
+#include <SFML/Graphics.hpp>
+
+#include <vector>
+#include <chrono>
+
+#include "Board.h"
+#include "TetrisShape.h"
+#include "TetrisShapes.h"
 
 class Game {
 
 public:
 
+	Game();
+	virtual ~Game();
+
+	void run();
+
+private:
+
 	//Variables.
 	sf::RenderWindow window;
-	std::vector<Tetris_Shape> shapes;
+	sf::Clock clock;
+	sf::Time startTime;
+	std::vector<TetrisShape> shapes;
+	std::vector<sf::Text> guiText;
+	//Parts of the border
+	sf::RectangleShape left;
+	sf::RectangleShape bottom;
+	sf::RectangleShape right;
+	//Next piece container
+	sf::RectangleShape box_left;
+	sf::RectangleShape box_bottom;
+	sf::RectangleShape box_right;
+	sf::RectangleShape box_top;
+
+	//Board
 	Board boardObj;
 
+	int score, level, timer, lineCount;	
 
-	//Constructor.
-	Game();
+	//Current falling shape.
+	TetrisShape currShape, nextShape;
 
 	//Memeber Methods.
-	void Run();
-	void Update();
-	void Draw();
-	void DrawBoard();
-	void DropPieces();
-	void StopShape(Tetris_Shape &shape);
+	void update();
+	void draw();
+	void drawBoard();
+	void drawShape();
+	void drawNextShape();
+	void drawBorder();
+	void dropPieces(const bool &toBottom);
+	void printBoard();
+	void randomPiece();
+	void input();
+
+	void gui();
+
+	//Check if a line needs to be removed or not.
+	void isWholeLine();
+	bool emptyTopRow();
+	bool dropTimer();
+
 };
+
+#endif
