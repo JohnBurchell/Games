@@ -23,8 +23,10 @@ private:
 
 	//Variables.
 	sf::RenderWindow window;
-	sf::Clock clock;
-	sf::Time startTime;
+	
+	std::chrono::high_resolution_clock::time_point startTime;
+	std::chrono::high_resolution_clock::time_point lastTime;
+
 	std::vector<TetrisShape> shapes;
 	std::vector<sf::Text> guiText;
 	//Parts of the border
@@ -55,6 +57,7 @@ private:
 	void dropPieces(const bool &toBottom);
 	void printBoard();
 	void randomPiece();
+	void setup();
 	void input();
 
 	void gui();

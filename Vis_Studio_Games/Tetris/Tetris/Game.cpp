@@ -4,15 +4,19 @@
 const int windowHeight = 960, windowWidth = 800;
 const int tileSize = 32;
 
-void draw_shape(TetrisShape &shape);
+using namespace std::chrono;
 
 Game::Game():
 	
 	score(0),
-	level(0),
+	level(1),
 	lineCount(0)
 
-	{
+	{}
+
+Game::~Game() {}
+
+void Game::setup() {
 
 	window.create(sf::VideoMode(windowWidth,windowHeight), "Tetris Clone, Version 1");
 	window.clear(sf::Color::Black);
@@ -31,7 +35,7 @@ Game::Game():
 	bottom.setSize(sf::Vector2f(tileSize * 13.05f, tileSize / 2));
 	bottom.setFillColor(sf::Color::Blue);
 	
-	//Start some UI stuff here!
+	//Setup UI 
 	gui();
 
 	//Create shapes and add them to the vector.
@@ -52,17 +56,12 @@ Game::Game():
 	shapes.push_back(TShape);
 
 	//Set variables up to default values
-
 	boardObj.create_board();
 	currShape.setFalling(false);
-
 }
-
-Game::~Game() {}
 
 void Game::run() 
 {
-
 	bool playing = true;
 	//Seed 
 	srand(static_cast<unsigned int>(time(nullptr)));
@@ -76,14 +75,14 @@ void Game::run()
 		//Get start time.
 		std::chrono::high_resolution_clock::time_point beginTime = std::chrono::high_resolution_clock::now();
 
-
 		//If the current shape is empty, it means there's nothing active.
 		if(!currShape.isFalling()) {
 			//Get next random piece, assign it to the next piece and set it on the board.
 			currShape = nextShape;
 			currShape.setFalling(true);
 			randomPiece();
-			startTime = clock.getElapsedTime();
+			//Reset start time of new shape.
+			startTime = high_resolution_clock::now();
 		}
 		
 		if(!emptyTopRow()){
@@ -92,7 +91,7 @@ void Game::run()
 			std::cout << "You scored " << score << " points, " <<
 				lineCount << " lines and reached level " << level
 				<< " Well done!! " << std::endl;
-			system("pause");
+
 			exit(0);
 		}
 		
@@ -104,10 +103,10 @@ void Game::run()
 		std::chrono::high_resolution_clock::time_point endTime = std::chrono::high_resolution_clock::now();
 		float result = std::chrono::duration_cast<std::chrono::duration<float>>(endTime - beginTime).count();
 
-		auto ftSeconds(result / 1000.f);
-		auto fps(1.f / ftSeconds);
+		duration<long long, std::milli> frames = duration_cast<milliseconds>(endTime - beginTime);
+		auto fps(1000 / frames.count());
 
-		window.setTitle("Tetris - Last frame: " + std::to_string(ftSeconds) + " FPS: " + std::to_string(fps));
+		window.setTitle("Tetris Clone, Version 1 - FPS: " + std::to_string(fps));
 	}
 }
 
@@ -126,7 +125,6 @@ void Game::run()
 
 void Game::draw() 
 {
-
 	window.clear(sf::Color::Black);
 	drawBoard();
 	drawShape();
@@ -142,7 +140,6 @@ void Game::draw()
 
 void Game::drawBoard() 
 {
-
 	for(int i = 0; i < tileSize; i++) {
 		for(int j = 0; j < tileSize; j++) {
 			if(boardObj.board[i][j].isFilled()) {
@@ -159,7 +156,6 @@ void Game::drawBoard()
 
 void Game::update() 
 {
-
 	//If enough time has passed, drop blocks.
 	if(dropTimer()){
 		dropPieces(false);
@@ -353,18 +349,31 @@ void Game::dropPieces(const bool &toBottom)
 }
 
 /*
-	Timer to check if a piece needs to drop down a line or not,
-	level * 0.2 - 0.5 of a second.
+	Timer to check if a piece needs to drop down a line or not
+	Currently calculated as:
+
+	1 second - level * 20
+
+	Level 1 is .5 of a second
 */
 
 bool Game::dropTimer()
 {
+	//Set current last time to now.
+	lastTime = high_resolution_clock::now();
 
-   	sf::Time now = clock.getElapsedTime();
-   	sf::Time lifetime = sf::seconds(1 - (0.4 *level));
+	duration<double> lifeTime = milliseconds(500 - ((level - 1) * 20));
 
-	if(now >= startTime + lifetime){
-		startTime = clock.restart();
+	//Force the speed to remain positive if it's gone below 0.0
+	if(lifeTime.count() <= 0.0) {
+
+		lifeTime = milliseconds(100);
+	}
+
+	if(lastTime >= startTime + lifeTime){
+
+		//Reset time to current time
+		startTime = high_resolution_clock::now();
 		return true;
 	} 
 
@@ -386,13 +395,11 @@ void Game::gui()
 	}
 
 	sf::Text next;
-	sf::Text score_text;
 	sf::Text lines_text;
 	sf::Text level_text;
 
 	//Add to vector of elements
 	guiText.push_back(next);
-	guiText.push_back(score_text);
 	guiText.push_back(lines_text);
 	guiText.push_back(level_text);
 
@@ -405,16 +412,6 @@ void Game::gui()
 	next.setCharacterSize(24);
 	next.setColor(sf::Color::White);
 	next.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-	score_text.setFont(font);
-	score_text.setPosition(windowWidth - (tileSize * 6), 780);
-
-	text = "Score: " + std::to_string(score);
-
-	score_text.setString(text);
-	score_text.setCharacterSize(24); 
-	score_text.setColor(sf::Color::White);
-	score_text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 	level_text.setFont(font);
 	level_text.setPosition(windowWidth - (tileSize * 6), 580);
@@ -436,7 +433,6 @@ void Game::gui()
 
 	window.draw(next);
 	window.draw(level_text);
-	window.draw(score_text);
 	window.draw(lines_text);
 
 }

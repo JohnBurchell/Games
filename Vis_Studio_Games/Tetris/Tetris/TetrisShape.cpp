@@ -11,7 +11,7 @@ TetrisShape::TetrisShape() :
 
 {}
 
-bool TetrisShape::isFilled() 
+bool TetrisShape::isFilled() const 
 {
 	return filled;
 }
@@ -21,7 +21,7 @@ void TetrisShape::setFilled(const bool &_filled)
 	filled = _filled;
 }
 
-float TetrisShape::getSize() 
+float TetrisShape::getSize() const
 {
 	return size;
 }
@@ -31,7 +31,7 @@ void TetrisShape::setSize(const float &_size)
 	size = _size;
 }
 
-bool TetrisShape::isFalling() 
+bool TetrisShape::isFalling() const
 {
 	return falling;
 }

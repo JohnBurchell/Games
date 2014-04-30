@@ -13,19 +13,19 @@ public:
 	//Standard constructor
 	TetrisShape();
 
-	inline int getX() { return x; };
+	inline int getX() const { return x; } ;
 	inline void setX(const int &_x) { x = _x; };
 
-	float getSize();
+	float getSize() const;
 	void setSize(const float &_Size);
 
-	inline int getY() {return y; };
+	inline int getY() const {return y; };
 	inline void setY(const int &_y) { y = _y; };
 
-	bool isFilled();
+	bool isFilled() const;
 	void setFilled(const bool &_filled);
 
-	bool isFalling();
+	bool isFalling() const;
 	void setFalling(const bool &_falling);
 
 	std::vector< std::vector<int> > layout;
