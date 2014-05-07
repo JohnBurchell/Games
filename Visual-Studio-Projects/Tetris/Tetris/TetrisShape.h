@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 #include <SFML/Graphics.hpp>
 
@@ -28,14 +29,21 @@ public:
 	bool isFalling() const;
 	void setFalling(const bool &_falling);
 
-	std::vector< std::vector<int> > layout;
-	sf::RectangleShape piece;
+	void setRotation(const int &_rotation);
+	int getRotation() const;
 
+	void changeRotation(const int &_rotation);
+
+	int layout[4][4];
+	//Hold the individual rotations.
+	int layouts[4][4][4];
+	sf::RectangleShape piece;
+	
 	~TetrisShape();
 
 private:
 
-	int x, y;
+	int x, y, rotation;
 
 protected:	
 

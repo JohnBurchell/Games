@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include "Game.h"
 
 const int windowHeight = 960, windowWidth = 800;
@@ -17,6 +16,9 @@ Game::Game():
 Game::~Game() {}
 
 void Game::setup() {
+
+	//Seed
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	window.create(sf::VideoMode(windowWidth,windowHeight), "Tetris Clone, Version 1");
 	window.clear(sf::Color::Black);
@@ -38,22 +40,25 @@ void Game::setup() {
 	//Setup UI 
 	gui();
 
+	//Load sounds
+	loadSounds();
+
 	//Create shapes and add them to the vector.
 	Cube cube;
 	Straight straight;
+	SShape sShape;
 	ZShape zShape;
+	TShape TShape;
 	LShape lShape;
 	LShape2 lShape2;
-	TShape TShape;
-	SShape sShape;
 
 	shapes.push_back(cube);
 	shapes.push_back(straight);
+	shapes.push_back(sShape);
 	shapes.push_back(zShape);
+	shapes.push_back(TShape);
 	shapes.push_back(lShape);
 	shapes.push_back(lShape2);
-	shapes.push_back(sShape);
-	shapes.push_back(TShape);
 
 	//Set variables up to default values
 	boardObj.create_board();
@@ -62,9 +67,12 @@ void Game::setup() {
 
 void Game::run() 
 {
+
+	setup();
+	createShapes();
+
 	bool playing = true;
 	//Seed 
-	srand(static_cast<unsigned int>(time(nullptr)));
 	std::cout << "Running!" << std::endl;
 
 	randomPiece();
@@ -78,14 +86,14 @@ void Game::run()
 		//If the current shape is empty, it means there's nothing active.
 		if(!currShape.isFalling()) {
 			//Get next random piece, assign it to the next piece and set it on the board.
-			currShape = nextShape;
+			currShape = *nextShape;
 			currShape.setFalling(true);
 			randomPiece();
 			//Reset start time of new shape.
 			startTime = high_resolution_clock::now();
 		}
 		
-		if(!emptyTopRow()){
+		if(!boardObj.emptyTopRow()){
 			//TODO - Improve this, especially when adding states.
 			std::cout << "GAME OVER!" << std::endl;
 			std::cout << "You scored " << score << " points, " <<
@@ -215,6 +223,7 @@ void Game::input()
 /*
 	Draws the current shape on the screen
 */
+
 void Game::drawShape()
 {
 	float floatX, floatY;
@@ -241,14 +250,14 @@ void Game::drawNextShape()
 	float floatX, floatY;
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
-			if(nextShape.layout[i][j] > 0){
+			if(nextShape->layout[i][j] > 0){
 
 				//Create proper sizes for the drawing of the shapes.
 				floatX = static_cast<float>((j * 32) + (windowWidth - tileSize * 4));
 				floatY = static_cast<float>((i * 32) + tileSize * 2);
 
-				nextShape.piece.setPosition(floatX, floatY);
-				window.draw(nextShape.piece);
+				nextShape->piece.setPosition(floatX, floatY);
+				window.draw(nextShape->piece);
 			}
 		}
 	}
@@ -273,25 +282,11 @@ void Game::drawBorder()
 
 void Game::randomPiece()
 {
-	nextShape = shapes[rand() % shapes.size()];
-	nextShape.setX(7);
-	nextShape.setY(0);
+	nextShape = &shapes[rand() % shapes.size()];
+	nextShape->setX(8);
+	nextShape->setY(-2);
+	nextShape->changeRotation(0);
 }
-
-/*
-	Checks if the top row is empty, used to check for end-game conditions
-*/
-
-bool Game::emptyTopRow()
-{
-	for(int j = 0; j < tileSize / 2; j ++){
-		if(boardObj.board[0][j].isFilled()){
-			return false;
-		}
-	}
-	return true;
-}
-
 
 /*
 	Checks if the line is full, i.e. the sum of the whole line is 
@@ -311,14 +306,12 @@ void Game::isWholeLine()
 		}
 
 		if(sum == 12) {
-			std::cout << "Whole line!" << std::endl;
 			boardObj.clearLine(i);
 			score += 10;
 			lineCount++;
 			//If it's divisible by 3 again, another 3 lines have been reached so
 			//The level goes up.
 			if(lineCount % 3 == 0) {
-				std::cout << "Level up!" << std::endl;
 				level++;
 			}
 		}
@@ -406,7 +399,7 @@ void Game::gui()
 	std::string text = "";
 
 	next.setFont(font);
-	next.setPosition(windowWidth - (tileSize * 8), 80);
+	next.setPosition(windowWidth - (tileSize * 8), 120);
 
 	next.setString("Next: ");
 	next.setCharacterSize(24);
@@ -435,4 +428,227 @@ void Game::gui()
 	window.draw(level_text);
 	window.draw(lines_text);
 
+}
+
+void Game::createShapes() {
+
+	//First, define the layouts of the shapes.
+			
+	int rotations[7][4][4][4] = {
+
+	//Cube
+	{
+		/*Rotation 1*/
+		{ { 0,0,0,0 },
+		  { 0,1,1,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,0,0,0 },
+		  { 0,1,1,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 0,1,1,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 0,0,0,0 },
+		  { 0,1,1,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }}
+
+	},
+
+	//Straight
+	{
+
+		/*Rotation 1*/
+		{ { 0,0,0,0 },
+		  { 1,1,1,1 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,0,1,0 },
+		  { 0,0,1,0 },
+		  { 0,0,1,0 },
+		  { 0,0,1,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 0,0,0,0 },
+		  { 1,1,1,1 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,1,0,0 }}
+
+	},
+	
+	//SZhape
+	{
+
+		/*Rotation 1*/
+		{ { 0,1,1,0 },
+		  { 1,1,0,0 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,1,0,0 },
+		  { 0,1,1,0 },
+		  { 0,0,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 0,1,1,0 },
+		  { 1,1,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 1,0,0,0 },
+		  { 1,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }}
+
+	},
+	
+	//ZShape
+	{
+
+		/*Rotation 1*/
+		{ { 1,1,0,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,0,1,0 },
+		  { 0,1,1,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 1,1,0,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 0,1,0,0 },
+		  { 1,1,0,0 },
+		  { 1,0,0,0 },
+		  { 0,0,0,0 }}
+
+	},
+
+	//T shape
+	{
+
+		/*Rotation 1*/
+		{ { 0,1,0,0 },
+		  { 1,1,1,0 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,1,0,0 },
+		  { 0,1,1,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 1,1,1,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 0,1,0,0 },
+		  { 1,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }}
+
+	},
+	
+	//Normal L
+	{
+
+		/*Rotation 1*/
+		{ { 0,0,1,0 },
+		  { 1,1,1,0 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,1,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 1,1,1,0 },
+		  { 1,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 1,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }}
+
+	},
+
+	//Mirrored L
+	{
+
+		/*Rotation 1*/
+		{ { 1,0,0,0 },
+		  { 1,1,1,0 },
+		  { 0,0,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 2*/
+		{ { 0,1,1,0 },
+		  { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 3*/
+		{ { 0,0,0,0 },
+		  { 1,1,1,0 },
+		  { 0,0,1,0 },
+		  { 0,0,0,0 }},
+		/*Rotation 4*/
+		{ { 0,1,0,0 },
+		  { 0,1,0,0 },
+		  { 1,1,0,0 },
+		  { 0,0,0,0 }}
+
+	}
+
+	};//End of rotations
+
+	//Iterator for stored shapes.
+	std::vector<TetrisShape>::iterator shape_iter = shapes.begin();
+
+	//I = Piece index
+	for(int i = 0; i < 7; i++) {
+		//r = rotation number
+		for(int r = 0; r < 4; r++) {
+			//x = col
+			for(int x = 0; x < 4; x++) {
+				//y = row
+				for(int y = 0; y < 4; y++) {
+					//Fill the layouts of the shapes
+					(*shape_iter).layouts[r][x][y] = rotations[i][r][x][y];
+				}
+			}
+		}
+		//Increment iterator to the next shape.
+		shape_iter++;
+	}
+}
+
+
+void Game::loadSounds() {
+
+	
+	if (!music.openFromFile("music/theme.ogg")) {
+		std::cerr << "Cannot find theme" << std::endl;
+	}
+
+	music.setLoop(true);
+	music.play();
+	return;
 }

@@ -2,6 +2,7 @@
 #define Game_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <vector>
 #include <chrono>
@@ -39,13 +40,17 @@ private:
 	sf::RectangleShape box_right;
 	sf::RectangleShape box_top;
 
+	//Placeholder for now
+	sf::Music music;
+
 	//Board
 	Board boardObj;
 
 	int score, level, timer, lineCount;	
+	bool topReached;
 
 	//Current falling shape.
-	TetrisShape currShape, nextShape;
+	TetrisShape currShape, *nextShape;
 
 	//Memeber Methods.
 	void update();
@@ -59,12 +64,14 @@ private:
 	void randomPiece();
 	void setup();
 	void input();
+	void loadSounds();
 
+	void createShapes();
+	void setRotation(const int &i);
 	void gui();
 
 	//Check if a line needs to be removed or not.
 	void isWholeLine();
-	bool emptyTopRow();
 	bool dropTimer();
 
 };
