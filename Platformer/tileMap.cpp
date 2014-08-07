@@ -16,8 +16,8 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	TileMap* map = new TileMap();
 
 	//Match the rows and cols to be correct multiples of the screen size.
-	const int num_rows = 20;
-	const int num_cols = 25;
+	const int num_rows = 30;
+	const int num_cols = 30;
 
 	map->mapTiles = vector < vector < Tile > >(num_rows, vector < Tile >(num_cols, Tile()));
 

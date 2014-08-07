@@ -16,6 +16,8 @@ class Graphics
 
 		void renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect* clip = nullptr) const;
 		void renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip = nullptr) const;
+		
+		void renderToCamera(int x, int y);
 
 		void flip();
 		void clear();

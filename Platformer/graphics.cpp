@@ -71,6 +71,11 @@ void Graphics::renderTexture(SDL_Texture *texture, const SDL_Rect destination, c
 	SDL_RenderCopy(renderer, texture, clip, &destination);
 }
 
+void Graphics::renderToCamera(int x, int y)
+{
+
+}
+
 void Graphics::flip()
 {
 	SDL_RenderPresent(renderer);
