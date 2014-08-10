@@ -66,15 +66,28 @@ void Graphics::renderTexture(SDL_Texture* texture, const int x, const int y, con
 	renderTexture(texture, destRectangle, clip);
 }
 
-void Graphics::renderTexture(SDL_Texture *texture, const SDL_Rect destination, const SDL_Rect *clip) const
+void Graphics::renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect *clip) const
 {
 	SDL_RenderCopy(renderer, texture, clip, &destination);
 }
 
-void Graphics::renderToCamera(int x, int y)
+void Graphics::testRender(SDL_Texture* texture, int x, int y, int width, int height, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
+	SDL_Rect renderQuad = { x, y, width, height };
 
+	if (clip != nullptr){
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}
+
+	//render to the screen, hopefuly!
+	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
 }
+
+//void Graphics::renderToCamera(int x, int y, SDL_Rect* clip, SDL_Point* center, SDL_RendererFlip flip)
+//{
+//	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
+//}
 
 void Graphics::flip()
 {

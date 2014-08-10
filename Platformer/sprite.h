@@ -7,16 +7,6 @@
 
 class Graphics;
 
-/*
-	Creates a basic sprite from a given file path.
-
-	/*Param 1 : Graphics reference
-	/*Param 2 : std::string filepath
-	/*Param 3 : int - x position in the sprite_sheet
-	/*Param 4 : int - y position in the sprite_sheet
-	/*Param 5 : int - width of the sprite
-	/*Param 6 : int - height of the sprite
-*/
 class Sprite 
 {
 	public:
@@ -26,14 +16,14 @@ class Sprite
 		void draw(Graphics& graphics, int x, int y);
 		void update(const int delta);
 
-	protected:
-		SDL_Rect sourceRectangle;
-
 	private:
 		SDL_Texture* texture_;
 		SDL_Rect destinationRectangle;
 
 		int x_, y_, width_, height_;
+
+	protected:
+		SDL_Rect sourceRectangle;
 };
 
 #endif //SPRITE_H_

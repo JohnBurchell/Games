@@ -17,29 +17,21 @@ class Game
 		Game();
 		~Game();
 
-		class Camera {
-
-		public:
-			Camera(int x, int y) :
-				camera_x(x),
-				camera_y(y)
-			{}
-
-			void update(int x, int y) { camera_x = x; camera_y = y; };
-			inline int getCamera_x() { return camera_x; };
-			inline int getCamera_y() { return camera_y; };
-
-		private:
-
-			int camera_x;
-			int camera_y;
-		};
+	struct Camera
+	{
+		explicit Camera(int width, int height) :
+			w(width),
+			h(height)
+		{};
+		int x, y;
+		int w, h;
+	};
 
 	private:
 		void run();
 		void input();
-		void update();
-		void draw();
+		void update(int delta);
+		void draw(Graphics& graphics, Camera& camera);
 
 		std::unique_ptr<TileMap> map;
 		std::unique_ptr<Player> player;
