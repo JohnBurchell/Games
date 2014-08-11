@@ -18,7 +18,7 @@ void Game::run()
 {
 	Graphics graphics;
 
-	player.reset(new Player(graphics, 0, 0));
+	player.reset(new Player(graphics, 6 * 32, 6 * 32));
 	//Map required to return a static map, due to missing rvalue probably?
 	map.reset(TileMap::generateDebugMap(graphics));
 
@@ -30,16 +30,12 @@ void Game::run()
 
 		auto frameStart = SDL_GetTicks();
 
-		//TODO - Get the scrolling working first, it'll probably be the hardest part!
-		//Add a camera that only focuses on the play and moves with them, get it working horizontally first
-		//then add in vertical movement with jumps etc
-
 		while (SDL_PollEvent(&event) != 0) {
 			player->handleEvent(event);
 		}
 
-		camera.x = (player->getXpos() - Constants::SCREEN_WIDTH  / 2);
-		camera.y = (player->getYpos() - Constants::SCREEN_HEIGHT / 2);
+		camera.x = (player->getXpos() + Constants::TILE_WIDTH  - Constants::SCREEN_WIDTH  / 2);
+		camera.y = (player->getYpos() + Constants::TILE_HEIGHT - Constants::SCREEN_HEIGHT / 2);
 
 		if (camera.x < 0)
 		{
@@ -58,16 +54,15 @@ void Game::run()
 			camera.y = Constants::LEVEL_HEIGHT - camera.h;
 		}
 
-		update(0);
+		//input();
+		update(SDL_GetTicks() - frameStart);
 		draw(graphics, camera);
-
-		std::cout << player->getYpos() << std::endl;
 	}
 }
 
-void Game::update(int delta)
+void Game::update(int time_ms)
 {
-	player->update(delta);
+	player->update(time_ms, *map);
 }
 
 void Game::draw(Graphics& graphics, Camera& camera)
@@ -82,3 +77,6 @@ Game::~Game()
 {
 	SDL_Quit();
 }
+
+
+//TODO - AABB - Axis Alligned Bounding Box

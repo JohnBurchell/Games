@@ -17,9 +17,9 @@ class Graphics
 		void renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect* clip = nullptr) const;
 		void renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip = nullptr) const;
 		
-		void renderToCamera(int x, int y, SDL_Rect* clip = nullptr, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+		//REMOVE LATER
+		void Graphics::render_rectanlge(const int pos_x, const int pos_y, const int colour, int width = 32, int height = 32);
 
-		void testRender(SDL_Texture* texture, int x, int y, int width, int height, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 		void flip();
 		void clear();

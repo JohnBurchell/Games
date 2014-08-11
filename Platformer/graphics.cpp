@@ -16,7 +16,6 @@ renderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED) }
 		std::cout << "Error creating renderer! " << SDL_GetError() << std::endl;
 	}
 
-	//TODO - Debug mode to show cursor?
 	SDL_ShowCursor(SDL_DISABLE);
 }
 
@@ -71,24 +70,6 @@ void Graphics::renderTexture(SDL_Texture* texture, const SDL_Rect destination, c
 	SDL_RenderCopy(renderer, texture, clip, &destination);
 }
 
-void Graphics::testRender(SDL_Texture* texture, int x, int y, int width, int height, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
-{
-	SDL_Rect renderQuad = { x, y, width, height };
-
-	if (clip != nullptr){
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
-
-	//render to the screen, hopefuly!
-	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
-}
-
-//void Graphics::renderToCamera(int x, int y, SDL_Rect* clip, SDL_Point* center, SDL_RendererFlip flip)
-//{
-//	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
-//}
-
 void Graphics::flip()
 {
 	SDL_RenderPresent(renderer);
@@ -96,6 +77,7 @@ void Graphics::flip()
 
 void Graphics::clear()
 {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 }
 
@@ -103,4 +85,51 @@ Graphics::~Graphics()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+}
+
+
+
+//Remove later
+void Graphics::render_rectanlge(const int pos_x, const int pos_y, const int colour, int width, int height)
+{
+	SDL_Color col;
+	switch (colour) {
+	case 1:
+		//Red
+		col = { 255, 0, 0, 255 };
+		break;
+	case 2:
+		//Yellow
+		col = { 255, 255, 0, 255 };
+		break;
+	case 3:
+		//Green
+		col = { 0, 255, 0, 255 };
+		break;
+	case 4:
+		//Blue
+		col = { 20, 20, 220, 255 };
+		break;
+	case 5:
+		//Teal
+		col = { 51, 204, 255, 255 };
+		break;
+		//Orange
+	case 6:
+		col = { 204, 153, 0, 255 };
+		break;
+		//Purple
+	case 7:
+		col = { 255, 0, 255, 255 };
+		break;
+	case 8:
+		col = { 255, 255, 255, 120 };
+		break;
+	default:
+		col = { 255, 255, 255, 255 };
+		break;
+	}
+	SDL_Rect rect = { pos_x, pos_y, width, height };
+	SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
+	SDL_RenderFillRect(renderer, &rect);
 }
