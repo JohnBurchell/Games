@@ -3,52 +3,60 @@
 #pragma once
 
 #include "common.h"
-#include "sprite.h"
-#include "graphics.h"
 #include "boundingBox.h"
-#include "tileMap.h"
+#include "actor.h"
 
-class Graphics;
+class Grpahics;
 class TileMap;
 
-class Player
+class Player : public Actor
 {
 	public:
 
-		Player(Graphics& graphics, int x, int y);
+		Player(Graphics& graphics, float x, float y);
 		~Player();
 
 		void draw(Graphics& graphics, int cameraX, int cameraY);
-		void update(const int delta, TileMap& map);
+		void update(const uint32_t delta, TileMap& map);
 
-		inline int getXpos() { return box_.x; };
-		inline int getYpos() { return box_.y; };
+		inline float getXpos() { return x_; };
+		inline float getYpos() { return y_; };
 
 		void handleEvent(SDL_Event& e);
 
 	private:
 
-		int xVelocity, yVelocity;
-		SDL_Rect box_;
+		struct CollisionResult
+		{
+			float x, y;
+			bool collided;
+		};
+
+		float x_, y_;
+		float xVelocity, yVelocity;
+		int accelerationX;
+		bool onGround, jumping;
 
 		friend bool operator<(Player& a, Player& b);
 
-		void updateX(const int delta, TileMap& map);
-		void updateY(const int delta, TileMap& map);
+		void updateX(const uint32_t delta, std::vector<BoundingBox>& collisionTiles);
+		void updateY(const uint32_t delta, std::vector<BoundingBox>& collisionTiles);
 
+		BoundingBox rightCollisionBox(float delta) const;
+		BoundingBox leftCollisionBox(float delta) const;
+		BoundingBox topCollisionBox(float delta) const;
+		BoundingBox bottomCollisionBox(float delta) const;
 
-		BoundingBox bottomCollision(const int delta) const;
-		BoundingBox topCollision(const int delta) const;
-		BoundingBox rightCollision(const int delta) const;
-		BoundingBox leftCollision(const int delta) const;
+		bool testCollision(const BoundingBox& a, const BoundingBox& b) const;
 
-
-		bool testCollision(BoundingBox& a, BoundingBox& b) const;
-		bool touchesWall(BoundingBox& a);
+		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
 
 		//This will have to be animated later!
 		std::unique_ptr<Sprite> sprite;
-		std::vector<TileMap::CollisionTile> collisionTiles;
+
+		std::vector<BoundingBox> debugTiles;
+		bool debug;
+		float debugDelta;
 };
 
 #endif //PLAYER_H_

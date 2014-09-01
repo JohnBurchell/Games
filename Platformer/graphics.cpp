@@ -3,17 +3,19 @@
 
 Graphics::Graphics() :
 
-window{ SDL_CreateWindow("Platformer - 0.1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-						 Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, SDL_WINDOW_SHOWN) },
-renderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED) }
+	window{ SDL_CreateWindow("Platformer - 0.1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+							 Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, SDL_WINDOW_SHOWN) },
+	renderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED) }
 
 {
 	if (window == NULL){
 		std::cout << "Error creating window! " << SDL_GetError() << std::endl;
+		throw Window_Error();
 	}
 
 	if (renderer == NULL){
 		std::cout << "Error creating renderer! " << SDL_GetError() << std::endl;
+		throw Renderer_Error();
 	}
 
 	SDL_ShowCursor(SDL_DISABLE);

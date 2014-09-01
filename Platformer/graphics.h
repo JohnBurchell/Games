@@ -3,7 +3,7 @@
 #pragma once
 
 #include <SDL.h>
-#include <map>
+#include <unordered_map>
 
 class Graphics
 {
@@ -33,7 +33,8 @@ class Graphics
 		class Texture_Error{};
 		class Surface_Error{};
 
-		std::map<std::string, SDL_Texture*> loadedImages;
+		//Unordered map used as I don't care about order, but only want the associativity given by a map structure.
+		std::unordered_map<std::string, SDL_Texture*> loadedImages;
 };
 
 #endif //GRAPHICS_H_

@@ -20,7 +20,8 @@ class Sprite
 		SDL_Texture* texture_;
 		SDL_Rect destinationRectangle;
 
-		int x_, y_, width_, height_;
+		int x_, y_;
+		int width_, height_;
 
 	protected:
 		SDL_Rect sourceRectangle;

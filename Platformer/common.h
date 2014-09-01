@@ -7,14 +7,14 @@
 
 namespace Constants 
 {
-	const int SCREEN_HEIGHT = 640;
-	const int SCREEN_WIDTH = 800;
+	const float SCREEN_HEIGHT = 640;
+	const float SCREEN_WIDTH = 800;
 
-	const int LEVEL_WIDTH  = 1600;
-	const int LEVEL_HEIGHT = 1280;
+	const float LEVEL_WIDTH = 1600;
+	const float LEVEL_HEIGHT = 1280;
 
-	const int TILE_HEIGHT = 32;
-	const int TILE_WIDTH = 32;
+	const float TILE_HEIGHT = 32;
+	const float TILE_WIDTH = 32;
 }
 
 #endif //COMMON_H_

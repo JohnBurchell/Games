@@ -12,10 +12,9 @@ TileMap::TileMap()
 
 TileMap* TileMap::generateDebugMap(Graphics& graphics)
 {
-	//TODO - Fill and create the test map.
 	TileMap* map = new TileMap();
 
-	//Match the rows and cols to be correct multiples of the screen size.
+	//Match the rows and cols to be correct multiples of the level size.
 	const int num_rows = 40;
 	const int num_cols = 50;
 
@@ -28,6 +27,8 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	for (int col = 0; col < num_cols; ++col) {
 		map->mapTiles[15][col] = tile;
 	}
+
+	map->mapTiles[15][40] = Tile();
 
 	for (int col = 0; col < num_cols; ++col) {
 		map->mapTiles[0][col] = tile;
@@ -46,34 +47,42 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	}
 
 	map->mapTiles[14][7] = tile;
+	map->mapTiles[13][7] = tile;
+	map->mapTiles[12][6] = tile;
+
+	map->mapTiles[14][9] = tile;
+	map->mapTiles[13][9] = tile;
+
+	map->mapTiles[13][10] = tile;
+	map->mapTiles[15][10] = tile;
+
+	map->mapTiles[12][15] = tile;
+	map->mapTiles[14][14] = tile;
+	map->mapTiles[13][15] = tile;
+	map->mapTiles[12][14] = tile;
+	map->mapTiles[12][13] = tile;
+
 
 	return map;
 }
 
-std::vector<TileMap::CollisionTile> TileMap::getCollisionTiles(BoundingBox& collider) const
+std::vector<BoundingBox> TileMap::getCollisionTiles() const
 {
-	const int firstRow = collider.top() / 32;
-	const int lastRow = collider.bottom() / 32;
-	const int firstCol = collider.left() / 32;
-	const int lastCol = collider.right() / 32;
+	std::vector<BoundingBox> collisionTiles;
 
-	//std::cout << "----" << std::endl;
-	//std::cout << firstRow << std::endl;
-	//std::cout << lastRow << std::endl;
-	//std::cout << firstCol << std::endl;
-	//std::cout << lastCol << std::endl;
-	//std::cout << "----" << std::endl;
+	//TODO - Optimise later - notably find the area around the "potentially" colliding box
 
-	std::vector<TileMap::CollisionTile> collisionTiles;
-
-	for (int row = firstRow; row <= lastRow; ++row){
-		for (int col = firstCol; col <= lastCol; ++col) {
-			collisionTiles.push_back(CollisionTile{ row, col, mapTiles[row][col].type_ });
+	for (size_t i = 0; i < mapTiles.size(); ++i) {
+		for (size_t j = 0; j < mapTiles[i].size(); ++j) {
+			if (mapTiles[i][j].type_ == TileType::WALL) {
+				collisionTiles.emplace_back(BoundingBox{ static_cast<float>(j * 32), static_cast<float>(i * 32) });
+			}
 		}
 	}
 
 	return collisionTiles;
 }
+
 
 void TileMap::update(int time_ms)
 {
@@ -81,7 +90,7 @@ void TileMap::update(int time_ms)
 	for (size_t row = 0; row < mapTiles.size(); ++row) {
 		for (size_t col = 0; col < mapTiles[row].size(); ++col) {
 			if (mapTiles[row][col].sprite_) {
-				//TODO
+				//mapTiles[row][col].sprite_->update(time_ms);
 			}
 		}
 	}
