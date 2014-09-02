@@ -19,7 +19,7 @@ class TileMap
 		~TileMap();
 
 		void update(int delta);
-		void draw(Graphics& graphics, int cameraX, int cameraY) const;
+		void draw(Graphics& graphics, float cameraX, float cameraY) const;
 		void drawBackground(Graphics& graphics);
 
 		//Possibly remove this later or keep just for testings?

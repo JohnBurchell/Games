@@ -17,7 +17,7 @@ class Actor
 {
 	public:
 		virtual ~Actor() = 0 { std::cout << "Base" << std::endl; };
-		virtual void draw(Graphics& graphics, int x, int y) = 0;
+		virtual void draw(Graphics& graphics, float x, float y) = 0;
 		virtual void update(const uint32_t time, TileMap& map) = 0;
 
 	private:

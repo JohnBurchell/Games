@@ -6,12 +6,15 @@
 #include "tileMap.h"
 #include "player.h"
 #include "enemy.h"
+#include "projectile.h"
+
 
 #include <SDL.h>
 
 class TileMap;
 class Player;
 class Enemy;
+class Projectile;
 
 class Game
 {
@@ -40,6 +43,7 @@ class Game
 		std::unique_ptr<TileMap> map;
 		std::unique_ptr<Player> player;
 		std::unique_ptr<Enemy> enemy;
+		std::vector< std::unique_ptr<Projectile> > projectiles;
 
 };
 

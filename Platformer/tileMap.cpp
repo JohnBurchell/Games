@@ -96,13 +96,15 @@ void TileMap::update(int time_ms)
 	}
 }
 
-void TileMap::draw(Graphics& graphics, int cameraX, int cameraY) const
+void TileMap::draw(Graphics& graphics, float cameraX, float cameraY) const
 {
 	//Cols measured in X, Rows in Y
 	for (size_t row = 0; row < mapTiles.size(); ++row) {
 		for (size_t col = 0; col < mapTiles[row].size(); ++col) {
 			if (mapTiles[row][col].sprite_) {
-				mapTiles[row][col].sprite_->draw(graphics, col * 32 - cameraX, row * 32 - cameraY);
+				float rowTest = static_cast<float>(row);
+				float colTest = static_cast<float>(col);
+				mapTiles[row][col].sprite_->draw(graphics, colTest * 32 - cameraX, rowTest * 32 - cameraY);
 			}
 		}
 	}

@@ -9,7 +9,6 @@ using std::vector;
 //Initial jump velocity = 2 * gravity * height at max jump
 
 namespace {
-	
 
 	constexpr float JUMP_SPEED = 0.25f;
 
@@ -39,9 +38,9 @@ Player::Player(Graphics& graphics, float x, float y) :
 	sprite.reset(new Sprite(graphics, "resources/sprites/player.bmp", 0, 0, 32, 32));
 }
 
-void Player::draw(Graphics& graphics, int cameraX, int cameraY)
+void Player::draw(Graphics& graphics, float cameraX, float cameraY)
 {
-	sprite->draw(graphics, static_cast<int>(x_ - cameraX), static_cast<int>(y_ - cameraY));
+	sprite->draw(graphics, x_ - cameraX, y_ - cameraY);
 
 	if (debug) {
 		for (auto& x : debugTiles) {
@@ -65,6 +64,8 @@ void Player::draw(Graphics& graphics, int cameraX, int cameraY)
 		BoundingBox x = { x_ + X_BOX.left(), y_ + X_BOX.top(), X_BOX.width(), X_BOX.height() };
 		y.draw(graphics, cameraX, cameraY, 2);
 		x.draw(graphics, cameraX, cameraY, 2);
+		//Damage rectangle below.
+		//getDamageRectangle().draw(graphics, cameraX, cameraY, 5);
 	}
 }
 
@@ -157,7 +158,7 @@ Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& col
 	CollisionResult result{ 0, 0, false };
 
 	for (auto& x : collisionTiles) {
-		if (testCollision(x, box)) {
+		if (box.boxCollision(x)) {
 			result.collided = true;
 			result.x = x.left();
 			result.y = x.top();
@@ -167,10 +168,18 @@ Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& col
 	return result;
 }
 
+BoundingBox Player::getDamageRectangle()
+{
+	return { x_ + X_BOX.left(), y_ + Y_BOX.top(), X_BOX.width(), Y_BOX.height() };
+}
+
+void Player::takeDamage()
+{
+	std::cout << "I took some damage!" << std::endl;
+}
+
 void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 {
-	//TODO - Perform X axis updates of movement and jumping.
-
 	// Euler Integration
 	//position += velocity * deltaTime
 	//velocity += acceleration * deltaTime
@@ -192,7 +201,6 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, rightCollisionBox(delta));
 
 		if (result.collided) {
-			std::cout << "right collided" << std::endl;
 			xVelocity = 0.0f;
 			x_ = result.x - X_BOX.right();
 		}
@@ -205,7 +213,6 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, leftCollisionBox(delta));
 
 		if (result.collided) {
-			std::cout << "left collided" << std::endl;
 			xVelocity = 0.0f;
 			x_ = result.x + X_BOX.right();
 		}
@@ -224,7 +231,6 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	//Implies falling
 	float delta = yVelocity * time_ms;
 
-	//TODO - Maybe display on screen?
 	debugDelta = delta;
 
 	//Going down
@@ -246,7 +252,6 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
 
 		if (result.collided) {
-			std::cout << "top collided" << std::endl;
 			y_ = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 		}
@@ -255,27 +260,6 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 			onGround = false;
 		}
 	}
-}
-
-bool Player::testCollision(const BoundingBox& a, const BoundingBox& b) const
-{
-	if (a.bottom() <= b.top()){
-		return false;
-	}
-
-	if (a.top() >= b.bottom()){
-		return false;
-	}
-
-	if (a.right() <= b.left()){
-		return false;
-	}
-	if (a.left() >= b.right()){
-		return false;
-	}
-
-	//There is a collision if this is reached.
-	return true;
 }
 
 Player::~Player()

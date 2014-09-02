@@ -13,7 +13,7 @@ class Sprite
 		Sprite(Graphics& graphics, std::string fileName, int x, int y, int height, int width);
 		~Sprite();
 
-		void draw(Graphics& graphics, int x, int y);
+		void draw(Graphics& graphics, float x, float y);
 		void update(const int delta);
 
 	private:

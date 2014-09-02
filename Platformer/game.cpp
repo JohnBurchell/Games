@@ -9,6 +9,7 @@ class Sprite;
 class InputHandler;
 class Player;
 class Enemy;
+class Projectile;
 
 Game::Game()
 {
@@ -56,8 +57,7 @@ void Game::run()
 
 		uint32_t frameStart = SDL_GetTicks();
 
-		//TODO - Finish the input handler, get basic input working first, it'll be ugly but working!
-		//inputHandler.handleInput();
+		//TODO - Finish the input handler
 
 		SDL_Event event;
 
@@ -85,19 +85,24 @@ void Game::run()
 
 void Game::update(uint32_t time_ms)
 {
-	enemy->update(time_ms, *map);
 	player->update(time_ms, *map);
+	enemy->updatePlayerData(player->getXpos(), player->getYpos());
+	enemy->update(time_ms, *map);
+
+	if (player->getDamageRectangle().boxCollision(enemy->getDamageRectangle())) {
+		player->takeDamage();
+	}
 }
 
 void Game::draw(Graphics& graphics, Camera& camera)
 {
 	graphics.clear();
 	map->draw(graphics, camera.x, camera.y);
-
-	enemy->updatePlayerData(player->getXpos(), player->getYpos());
 	enemy->draw(graphics, camera.x, camera.y);
-
 	player->draw(graphics, camera.x, camera.y);
+	for (auto& x : projectiles) {
+		x->draw(graphics, camera.x, camera.y);
+	}
 	graphics.flip();
 }
 

@@ -9,9 +9,9 @@ Sprite::Sprite(Graphics& graphics, std::string fileName, int x, int y, int heigh
 	sourceRectangle.h = height;
 }
 
-void Sprite::draw(Graphics& graphics, int x, int y)
+void Sprite::draw(Graphics& graphics, float x, float y)
 {
-	graphics.renderTexture(texture_, x, y, &sourceRectangle);
+	graphics.renderTexture(texture_, static_cast<int>(x), static_cast<int>(y), &sourceRectangle);
 }
 
 Sprite::~Sprite()

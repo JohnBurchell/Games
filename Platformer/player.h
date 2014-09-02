@@ -14,13 +14,17 @@ class Player : public Actor
 	public:
 
 		Player(Graphics& graphics, float x, float y);
-		~Player();
+		~Player() override;
 
-		void draw(Graphics& graphics, int cameraX, int cameraY);
-		void update(const uint32_t delta, TileMap& map);
+		void draw(Graphics& graphics, float cameraX, float cameraY) override;
+		void update(const uint32_t delta, TileMap& map) override;
+
+		BoundingBox getDamageRectangle();
 
 		inline float getXpos() { return x_; };
 		inline float getYpos() { return y_; };
+
+		void takeDamage();
 
 		void handleEvent(SDL_Event& e);
 
@@ -46,8 +50,6 @@ class Player : public Actor
 		BoundingBox leftCollisionBox(float delta) const;
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
-
-		bool testCollision(const BoundingBox& a, const BoundingBox& b) const;
 
 		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
 
