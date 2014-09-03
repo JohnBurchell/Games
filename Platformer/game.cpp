@@ -2,6 +2,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "input.h"
+#include "boundingBox.h"
 
 //Forward declarations
 class Graphics;
@@ -88,10 +89,8 @@ void Game::update(uint32_t time_ms)
 	player->update(time_ms, *map);
 	enemy->updatePlayerData(player->getXpos(), player->getYpos());
 	enemy->update(time_ms, *map);
+	
 
-	if (player->getDamageRectangle().boxCollision(enemy->getDamageRectangle())) {
-		player->takeDamage();
-	}
 }
 
 void Game::draw(Graphics& graphics, Camera& camera)

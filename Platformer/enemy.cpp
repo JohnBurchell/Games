@@ -50,7 +50,7 @@ void Enemy::updatePlayerData(float x, float y)
 	playerLocation.playerY = y;
 }
 
-void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+void Enemy::updateY(const uint32_t time_ms, const std::vector<BoundingBox>& collisionTiles)
 {
 	//TODO - Improve, add collision for the enemy
 	float yVelocity = 0.0f;
@@ -98,7 +98,7 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	}
 }
 
-void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+void Enemy::updateX(const uint32_t time_ms,  const std::vector<BoundingBox>& collisionTiles)
 {
 	float xVelocity = 0.0f;
 
@@ -175,7 +175,7 @@ BoundingBox Enemy::bottomCollisionBox(float delta) const
 		Y_BOX.height() / 2 + delta };
 }
 
-Enemy::CollisionResult Enemy::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box)
+Enemy::CollisionResult Enemy::getCollisionResult(const std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 
@@ -192,7 +192,7 @@ Enemy::CollisionResult Enemy::getCollisionResult(std::vector<BoundingBox>& colli
 
 BoundingBox Enemy::getDamageRectangle()
 {
-	return{ x_ + X_BOX.left(), y_ + Y_BOX.top(), X_BOX.width(), X_BOX.height() };
+	return { x_ + X_BOX.left(), y_ + Y_BOX.top(), X_BOX.width(), X_BOX.height() };
 }
 
 Enemy::~Enemy()

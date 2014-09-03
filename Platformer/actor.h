@@ -16,7 +16,7 @@ class Sprite;
 class Actor
 {
 	public:
-		virtual ~Actor() = 0 { std::cout << "Base" << std::endl; };
+		virtual ~Actor() = 0;
 		virtual void draw(Graphics& graphics, float x, float y) = 0;
 		virtual void update(const uint32_t time, TileMap& map) = 0;
 
@@ -25,5 +25,10 @@ class Actor
 
 		std::shared_ptr<Sprite> sprite_;
 };
+
+inline Actor::~Actor()
+{
+	//Implementation for derriving classes.
+}
 
 #endif //ACTOR_H_

@@ -83,11 +83,15 @@ void Player::handleEvent(SDL_Event& e)
 			break;
 		case SDLK_UP:
 			if (onGround) {
+				std::cout << "Jumping!" << std::endl;
 				yVelocity = INITIAL_JUMP_VELOCITY;
 			}
 			break;
 		case SDLK_F12:
 			debug = !debug;
+			break;
+		case SDLK_ESCAPE:
+			exit(0);
 			break;
 		}
 	}
@@ -153,7 +157,7 @@ BoundingBox Player::bottomCollisionBox(float delta) const
 		Y_BOX.height() / 2 + delta};
 }
 
-Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box)
+Player::CollisionResult Player::getCollisionResult(const std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 
@@ -178,7 +182,7 @@ void Player::takeDamage()
 	std::cout << "I took some damage!" << std::endl;
 }
 
-void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+void Player::updateX(uint32_t time_ms, const std::vector<BoundingBox>& collisionTiles)
 {
 	// Euler Integration
 	//position += velocity * deltaTime
@@ -222,7 +226,7 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	}
 }
 
-void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+void Player::updateY(uint32_t time_ms, const std::vector<BoundingBox>& collisionTiles)
 {
 	float yAcceleration = jumping && yVelocity < 0.0f ? INITIAL_JUMP_VELOCITY : GRAVITY;
 	
@@ -252,6 +256,7 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
 
 		if (result.collided) {
+			std::cout << "Collided above me" << std::endl;
 			y_ = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 		}
