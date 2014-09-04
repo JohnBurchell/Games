@@ -46,6 +46,8 @@ class TileMap
 		};
 
 		std::vector< BoundingBox > getCollisionTiles() const;
+		std::vector< BoundingBox >   getCollisionTilesTest(const BoundingBox& box) const;
+
 
 	private:
 

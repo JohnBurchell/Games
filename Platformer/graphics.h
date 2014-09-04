@@ -2,7 +2,7 @@
 #define GRAPHICS_H_
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <unordered_map>
 
 class Graphics
@@ -18,7 +18,7 @@ class Graphics
 		void renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip = nullptr) const;
 		
 		//REMOVE LATER
-		void render_rectanlge(const int pos_x, const int pos_y, const int colour, int width = 32, int height = 32);
+		void Graphics::render_rectanlge(const int pos_x, const int pos_y, const int colour, int width = 32, int height = 32);
 
 
 		void flip();

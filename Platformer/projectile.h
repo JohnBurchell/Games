@@ -5,24 +5,38 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "boundingBox.h"
+#include "tileMap.h"
 
 class Graphics;
 class Sprite;
+class TileMap;
 
 class Projectile
 {
 
 	public:
-		Projectile(Graphics& graphics, float x, float y);
+		Projectile(Graphics& graphics, float x, float y, float velocity);
 		~Projectile();
 
 		void draw(Graphics& graphics, float cameraX, float cameraY);
-		void update(float delta);
+		void update(uint32_t time_ms, const TileMap& map);
 	
-		BoundingBox getDamageRectangle();
+		BoundingBox getDamageRectangle() const;
+
+		bool hasCollided() const;
 
 	private:
-		float x_, y_;
+		float x_, y_, velocity_;
+		bool collided;
+
+		struct CollisionResult
+		{
+			float x, y;
+			bool collided;
+		};
+
+		Projectile::CollisionResult Projectile::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box);
+
 		std::unique_ptr<Sprite> sprite_;
 };
 

@@ -25,8 +25,13 @@ class Player : public Actor
 		inline float getYpos() { return y_; };
 
 		void takeDamage();
+		void startJump();
+		void startMovingLeft();
+		void startMovingRight();
+		void stopMoving();
+		void shoot();
 
-		void handleEvent(SDL_Event& e);
+		void enableDebug();
 
 	private:
 
@@ -43,15 +48,15 @@ class Player : public Actor
 
 		friend bool operator<(Player& a, Player& b);
 
-		void updateX(const uint32_t delta, const std::vector<BoundingBox>& collisionTiles);
-		void updateY(const uint32_t delta, const std::vector<BoundingBox>& collisionTiles);
+		void updateX(const uint32_t delta, std::vector<BoundingBox>& collisionTiles);
+		void updateY(const uint32_t delta, std::vector<BoundingBox>& collisionTiles);
 
 		BoundingBox rightCollisionBox(float delta) const;
 		BoundingBox leftCollisionBox(float delta) const;
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
 
-		CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
+		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
 
 		//This will have to be animated later!
 		std::unique_ptr<Sprite> sprite;

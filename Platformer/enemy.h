@@ -26,8 +26,8 @@ class Enemy : Actor
 
 	private:
 
-		void updateY(const uint32_t time_ms, const std::vector<BoundingBox>& collisionTiles);
-		void updateX(const uint32_t time_ms, const std::vector<BoundingBox>& collisionTiles);
+		void updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
+		void updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
 		bool onGround;
 
 		struct CollisionResult
@@ -41,7 +41,7 @@ class Enemy : Actor
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
 
-		CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
+		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
 
 		float x_, y_;
 		std::shared_ptr<Sprite> sprite_;

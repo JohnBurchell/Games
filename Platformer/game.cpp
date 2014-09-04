@@ -1,13 +1,10 @@
 #include "game.h"
 #include "graphics.h"
 #include "sprite.h"
-#include "input.h"
-#include "boundingBox.h"
 
 //Forward declarations
 class Graphics;
 class Sprite;
-class InputHandler;
 class Player;
 class Enemy;
 class Projectile;
@@ -42,28 +39,57 @@ void Game::updateCamera(Camera& camera)
 void Game::run()
 {
 	Graphics graphics;
-	InputHandler inputHandler;
 
 	player.reset(new Player(graphics, 6 * 32, 6 * 32));
 	enemy.reset(new Enemy(graphics, 8 * 32, 8 * 32));
+	projectile.reset(new Projectile(graphics, player->getXpos(), player->getYpos(), 0.05f));
 
 	map.reset(map->generateDebugMap(graphics));
 
 	Camera camera { Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT };
 
-	
 	uint32_t previousFrameTime = SDL_GetTicks();
 
 	for (;;) {
 
 		uint32_t frameStart = SDL_GetTicks();
 
-		//TODO - Finish the input handler
+		SDL_Event e;
 
-		SDL_Event event;
+		while (SDL_PollEvent(&e) != 0) {
+			if (e.type == SDL_KEYDOWN){
+				switch (e.key.keysym.sym) {
+				case SDLK_RIGHT:
+					player->startMovingRight();
+					break;
+				case SDLK_LEFT:
+					player->startMovingLeft();
+					break;
+				case SDLK_UP:
+					player->startJump();
+					break;
+				case SDLK_RETURN:
+					//projectiles->shoot(graphics, player->getXpos(), player->getYpos(), 1.0f);
+					//projectiles.emplace_back(new Projectile{ graphics, player->getXpos(), player->getYpos(), 1.0f });
+					projectiles.emplace_back( new Projectile(graphics, player->getXpos(), player->getYpos(), 1.0f));
+					break;
+				case SDLK_F12:
+					player->enableDebug();
+					break;
+				case SDLK_ESCAPE:
+					exit(0);
+					break;
+				}
+			}
 
-		while (SDL_PollEvent(&event) != 0) {
-			player->handleEvent(event);
+			else if (e.type == SDL_KEYUP){
+				switch (e.key.keysym.sym) {
+					case SDLK_RIGHT:
+						player->stopMoving();
+					case SDLK_LEFT:
+						player->stopMoving();
+				}
+			}
 		}
 
 		uint32_t currentTime = SDL_GetTicks();
@@ -89,8 +115,17 @@ void Game::update(uint32_t time_ms)
 	player->update(time_ms, *map);
 	enemy->updatePlayerData(player->getXpos(), player->getYpos());
 	enemy->update(time_ms, *map);
-	
 
+	for (auto& x : projectiles) {
+		x->update(time_ms, *map);
+	}
+
+	projectile->update(time_ms, *map);
+
+
+	if (player->getDamageRectangle().boxCollision(enemy->getDamageRectangle())) {
+		player->takeDamage();
+	}
 }
 
 void Game::draw(Graphics& graphics, Camera& camera)
@@ -99,9 +134,12 @@ void Game::draw(Graphics& graphics, Camera& camera)
 	map->draw(graphics, camera.x, camera.y);
 	enemy->draw(graphics, camera.x, camera.y);
 	player->draw(graphics, camera.x, camera.y);
+	projectile->draw(graphics, camera.x, camera.y);
+
 	for (auto& x : projectiles) {
 		x->draw(graphics, camera.x, camera.y);
 	}
+
 	graphics.flip();
 }
 
