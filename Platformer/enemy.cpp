@@ -50,6 +50,14 @@ void Enemy::updatePlayerData(float x, float y)
 	playerLocation.playerY = y;
 }
 
+void Enemy::takeDamage(int damage)
+{
+	health -= damage;
+	if(health <= 0) {
+		//Alive = false?
+	}
+}
+
 void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 {
 	//TODO - Improve, add collision for the enemy
@@ -175,7 +183,7 @@ BoundingBox Enemy::bottomCollisionBox(float delta) const
 		Y_BOX.height() / 2 + delta };
 }
 
-Enemy::CollisionResult Enemy::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box)
+Enemy::CollisionResult Enemy::getCollisionResult(const std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 

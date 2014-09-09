@@ -24,6 +24,9 @@ class Player : public Actor
 		inline float getXpos() { return x_; };
 		inline float getYpos() { return y_; };
 
+		//Remove - Replace with sprite facing when animation is implemented?
+		inline float getVelocity() { return xVelocity; };
+
 		void takeDamage();
 		void startJump();
 		void startMovingLeft();
@@ -56,7 +59,7 @@ class Player : public Actor
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
 
-		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
+		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
 
 		//This will have to be animated later!
 		std::unique_ptr<Sprite> sprite;

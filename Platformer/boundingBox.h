@@ -1,5 +1,5 @@
 #ifndef BOUNDINGBOX_H_
-#define BONUDINGBOX_H_
+#define BOUNDINGBOX_H_
 #pragma once
 
 #include "graphics.h"
@@ -23,7 +23,7 @@ class BoundingBox
 		inline float height() const { return height_; };
 
 		//Potentially viable inline, not sure yet
-		inline bool boxCollision(BoundingBox& a) {
+		inline bool boxCollision(const BoundingBox& a) const {
 
 			if (bottom() <= a.top()){
 				return false;

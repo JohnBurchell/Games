@@ -41,9 +41,12 @@ class Enemy : Actor
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
 
-		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, BoundingBox& box);
+		void takeDamage(int damage);
+
+		CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
 
 		float x_, y_;
+		int health;
 		std::shared_ptr<Sprite> sprite_;
 
 		struct PlayerLocation

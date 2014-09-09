@@ -72,10 +72,10 @@ std::vector<BoundingBox> TileMap::getCollisionTilesTest(const BoundingBox& box) 
 
 	//TODO - Optimise later - notably find the area around the "potentially" colliding box
 
-	const int first_row = unsigned int(box.top() / 32);
-	const int last_row = unsigned int(box.bottom() / 32);
-	const int first_col = unsigned int(box.left() / 32);
-	const int last_col = unsigned int(box.right() / 32);
+	const int first_row = static_cast<unsigned int>(box.top() / 32);
+	const int last_row  = static_cast<unsigned int>(box.bottom() / 32);
+	const int first_col = static_cast<unsigned int>(box.left() / 32);
+	const int last_col  = static_cast<unsigned int>(box.right() / 32);
 
 	std::cout << "----" << std::endl;
 	std::cout << first_row << std::endl;
@@ -129,6 +129,7 @@ void TileMap::draw(Graphics& graphics, float cameraX, float cameraY) const
 	for (size_t row = 0; row < mapTiles.size(); ++row) {
 		for (size_t col = 0; col < mapTiles[row].size(); ++col) {
 			if (mapTiles[row][col].sprite_) {
+				//TODO - Tidy this up.
 				float rowTest = static_cast<float>(row);
 				float colTest = static_cast<float>(col);
 				mapTiles[row][col].sprite_->draw(graphics, colTest * 32 - cameraX, rowTest * 32 - cameraY);

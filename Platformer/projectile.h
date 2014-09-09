@@ -23,6 +23,8 @@ class Projectile
 	
 		BoundingBox getDamageRectangle() const;
 
+		inline float getPos() { return x_; };
+
 		bool hasCollided() const;
 
 	private:
@@ -35,9 +37,9 @@ class Projectile
 			bool collided;
 		};
 
-		Projectile::CollisionResult Projectile::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box);
+		CollisionResult getCollisionResult(std::vector<BoundingBox>& collisionTiles, const BoundingBox& box);
 
-		std::unique_ptr<Sprite> sprite_;
+		std::shared_ptr<Sprite> sprite_;
 };
 
 #endif //PROJECTILE_H_

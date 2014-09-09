@@ -9,7 +9,7 @@
 #include "projectile.h"
 
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 class TileMap;
 class Player;
@@ -43,7 +43,6 @@ class Game
 		std::unique_ptr<TileMap> map;
 		std::unique_ptr<Player> player;
 		std::unique_ptr<Enemy> enemy;
-		std::unique_ptr<Projectile> projectile;
 
 		std::vector< std::unique_ptr<Projectile> > projectiles;
 

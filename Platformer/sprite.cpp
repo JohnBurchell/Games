@@ -16,5 +16,5 @@ void Sprite::draw(Graphics& graphics, float x, float y)
 
 Sprite::~Sprite()
 {
-	SDL_DestroyTexture(texture_);
+	
 }

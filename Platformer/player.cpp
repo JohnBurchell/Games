@@ -108,7 +108,9 @@ void Player::update(uint32_t time_ms, TileMap& map)
 	std::vector<BoundingBox> collisionTiles = map.getCollisionTiles();
 
 	if (debug) {
-		debugTiles = map.getCollisionTilesTest(bottomCollisionBox(10));
+		//debugTiles = map.getCollisionTilesTest(bottomCollisionBox(10));
+		//No copy constructor exists for collision tiles yet - TODO?
+		debugTiles = map.getCollisionTiles();
 	}
 
 	updateY(time_ms, collisionTiles);
@@ -151,7 +153,7 @@ BoundingBox Player::bottomCollisionBox(float delta) const
 		Y_BOX.height() / 2 + delta};
 }
 
-Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& collisionTiles, BoundingBox& box)
+Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 
@@ -173,7 +175,6 @@ BoundingBox Player::getDamageRectangle()
 
 void Player::takeDamage()
 {
-	std::cout << "I took some damage!" << std::endl;
 }
 
 void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
@@ -183,8 +184,8 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	//velocity += acceleration * deltaTime
 	float acceleration_x_ = 0.0f;
 
-	if (accelerationX < 0) acceleration_x_ = onGround ? -0.14f : -0.14f;
-	else if (accelerationX > 0) acceleration_x_ = onGround ? 0.14f : 0.14f;
+	if (accelerationX < 0) acceleration_x_ = onGround ? -0.54f : -0.14f;
+	else if (accelerationX > 0) acceleration_x_ = onGround ? 0.54f : 0.14f;
 
 	xVelocity += acceleration_x_ * time_ms;
 
@@ -252,10 +253,10 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		if (result.collided) {
 			y_ = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
+			onGround = true;
 		}
 		else {
 			y_ += delta;
-			onGround = false;
 		}
 	}
 }

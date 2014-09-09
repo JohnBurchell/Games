@@ -2,6 +2,9 @@
 #include "graphics.h"
 #include "sprite.h"
 
+#include <algorithm>
+#include <memory>
+
 //Forward declarations
 class Graphics;
 class Sprite;
@@ -41,8 +44,7 @@ void Game::run()
 	Graphics graphics;
 
 	player.reset(new Player(graphics, 6 * 32, 6 * 32));
-	enemy.reset(new Enemy(graphics, 8 * 32, 8 * 32));
-	projectile.reset(new Projectile(graphics, player->getXpos(), player->getYpos(), 0.05f));
+	enemy.reset(new Enemy(graphics, 10 * 32, 8 * 32));
 
 	map.reset(map->generateDebugMap(graphics));
 
@@ -69,9 +71,12 @@ void Game::run()
 					player->startJump();
 					break;
 				case SDLK_RETURN:
-					//projectiles->shoot(graphics, player->getXpos(), player->getYpos(), 1.0f);
-					//projectiles.emplace_back(new Projectile{ graphics, player->getXpos(), player->getYpos(), 1.0f });
-					projectiles.emplace_back( new Projectile(graphics, player->getXpos(), player->getYpos(), 1.0f));
+					projectiles.emplace_back( 
+						new Projectile(graphics, 
+									   player->getXpos(), 
+									   player->getYpos(),
+									   //Dirty - But it'll do for now
+									   player->getVelocity() >= 0 ? 0.5f : -0.5f));
 					break;
 				case SDLK_F12:
 					player->enableDebug();
@@ -120,11 +125,14 @@ void Game::update(uint32_t time_ms)
 		x->update(time_ms, *map);
 	}
 
-	projectile->update(time_ms, *map);
-
-
 	if (player->getDamageRectangle().boxCollision(enemy->getDamageRectangle())) {
 		player->takeDamage();
+	}
+
+	auto predicate = [=](std::unique_ptr<Projectile>& a) { return a->hasCollided(); };
+
+	if(projectiles.size() > 0 ){
+		projectiles.erase(std::remove_if(std::begin(projectiles), std::end(projectiles), predicate), std::end(projectiles));
 	}
 }
 
@@ -134,7 +142,6 @@ void Game::draw(Graphics& graphics, Camera& camera)
 	map->draw(graphics, camera.x, camera.y);
 	enemy->draw(graphics, camera.x, camera.y);
 	player->draw(graphics, camera.x, camera.y);
-	projectile->draw(graphics, camera.x, camera.y);
 
 	for (auto& x : projectiles) {
 		x->draw(graphics, camera.x, camera.y);

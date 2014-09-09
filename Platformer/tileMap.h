@@ -46,7 +46,7 @@ class TileMap
 		};
 
 		std::vector< BoundingBox > getCollisionTiles() const;
-		std::vector< BoundingBox >   getCollisionTilesTest(const BoundingBox& box) const;
+		std::vector< BoundingBox > getCollisionTilesTest(const BoundingBox& box) const;
 
 
 	private:
@@ -54,7 +54,8 @@ class TileMap
 		//TO-DO
 		//Background Images - If doing Parallax then I'll need 3
 		//Background Sprites
-		//Foreground Sprites
+		//Foreground Sprites:
+		//	Projectiles, other things?
 		//Decide how to read a file containing map information, probably have this in a text / binary doc that I read whenever i'm loading a level.
 
 		class Tile
