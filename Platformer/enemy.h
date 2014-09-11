@@ -21,6 +21,9 @@ class Enemy : Actor
 		void draw(Graphics& graphics, float x, float y) override;
 		void update(const uint32_t time, TileMap& map) override;
 
+		inline bool isAlive() { return alive; };
+		void takeDamage(int damage = 1);
+
 		void updatePlayerData(float x, float y);
 		BoundingBox getDamageRectangle();
 
@@ -28,7 +31,7 @@ class Enemy : Actor
 
 		void updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
 		void updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
-		bool onGround;
+		bool onGround, alive;
 
 		struct CollisionResult
 		{
@@ -41,7 +44,6 @@ class Enemy : Actor
 		BoundingBox topCollisionBox(float delta) const;
 		BoundingBox bottomCollisionBox(float delta) const;
 
-		void takeDamage(int damage);
 
 		CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
 

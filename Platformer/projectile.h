@@ -26,6 +26,7 @@ class Projectile
 		inline float getPos() { return x_; };
 
 		bool hasCollided() const;
+		void collision();
 
 	private:
 		float x_, y_, velocity_;

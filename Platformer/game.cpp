@@ -43,8 +43,9 @@ void Game::run()
 {
 	Graphics graphics;
 
-	player.reset(new Player(graphics, 6 * 32, 6 * 32));
-	enemy.reset(new Enemy(graphics, 10 * 32, 8 * 32));
+	player.reset(new Player(graphics, 4 * 32, 4 * 32));
+
+	enemies.emplace_back(new Enemy(graphics, 8 * 32, 4 * 32));
 
 	map.reset(map->generateDebugMap(graphics));
 
@@ -69,6 +70,9 @@ void Game::run()
 					break;
 				case SDLK_UP:
 					player->startJump();
+					break;
+				case SDLK_BACKSPACE:
+					enemies.emplace_back(new Enemy(graphics, 8 * 32, 4 * 32));
 					break;
 				case SDLK_RETURN:
 					projectiles.emplace_back( 
@@ -118,21 +122,39 @@ void Game::run()
 void Game::update(uint32_t time_ms)
 {
 	player->update(time_ms, *map);
-	enemy->updatePlayerData(player->getXpos(), player->getYpos());
-	enemy->update(time_ms, *map);
 
-	for (auto& x : projectiles) {
+	auto playerX = player->getXpos();
+	auto playerY = player->getYpos();
+
+	for(auto& x : enemies) {
+		x->updatePlayerData(playerX, playerY);
 		x->update(time_ms, *map);
 	}
 
-	if (player->getDamageRectangle().boxCollision(enemy->getDamageRectangle())) {
-		player->takeDamage();
+	for (auto& x : projectiles) {
+		x->update(time_ms, *map);
+
+		for(auto& y : enemies) {
+			if(y->getDamageRectangle().boxCollision(x->getDamageRectangle())){
+				y->takeDamage();
+				x->collision();
+			}
+
+			if (player->getDamageRectangle().boxCollision(y->getDamageRectangle())) {
+				//This check might not be needed, not sure if enemies are going to shoot at all.
+				player->takeDamage();
+			}
+		}
 	}
 
 	auto predicate = [=](std::unique_ptr<Projectile>& a) { return a->hasCollided(); };
+	auto predicateEnemy = [=](std::unique_ptr<Enemy>& a) { return !a->isAlive(); };
 
 	if(projectiles.size() > 0 ){
 		projectiles.erase(std::remove_if(std::begin(projectiles), std::end(projectiles), predicate), std::end(projectiles));
+	}
+	if(enemies.size() > 0 ){
+		enemies.erase(std::remove_if(std::begin(enemies), std::end(enemies), predicateEnemy), std::end(enemies));
 	}
 }
 
@@ -140,10 +162,13 @@ void Game::draw(Graphics& graphics, Camera& camera)
 {
 	graphics.clear();
 	map->draw(graphics, camera.x, camera.y);
-	enemy->draw(graphics, camera.x, camera.y);
 	player->draw(graphics, camera.x, camera.y);
 
 	for (auto& x : projectiles) {
+		x->draw(graphics, camera.x, camera.y);
+	}
+
+	for(auto& x : enemies) {
 		x->draw(graphics, camera.x, camera.y);
 	}
 

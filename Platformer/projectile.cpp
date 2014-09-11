@@ -33,6 +33,11 @@ bool Projectile::hasCollided() const
 	return collided;
 }
 
+void Projectile::collision()
+{
+	collided = true;
+}
+
 BoundingBox Projectile::getDamageRectangle() const
 {
 	return BoundingBox{ x_ + 16, y_ + 5, 16, 5 };

@@ -25,7 +25,13 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	Tile tile{ testSprite, TileType::WALL };
 
 	for (int col = 0; col < num_cols; ++col) {
-		map->mapTiles[15][col] = tile;
+		map->mapTiles[6][col] = tile;
+	}
+
+	map->mapTiles[6][num_cols - 3] = Tile();
+
+	for (int col = 0; col < num_cols; ++col) {
+		map->mapTiles[12][col] = tile;
 	}
 
 	map->mapTiles[15][40] = Tile();
@@ -45,6 +51,16 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	for (int row = 0; row < num_rows; ++row) {
 		map->mapTiles[row][49] = tile;
 	}
+
+	for (int col = 0; col < num_cols; ++col) {
+		map->mapTiles[21][col] = tile;
+	}
+
+	for (int col = 0; col < num_cols; ++col) {
+		map->mapTiles[27][col] = tile;
+	}
+
+	map->mapTiles[21][3] = Tile();
 
 	map->mapTiles[14][7] = tile;
 	map->mapTiles[13][7] = tile;

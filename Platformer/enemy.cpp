@@ -19,7 +19,9 @@ namespace {
 Enemy::Enemy(Graphics& graphics, float x, float y) :
 	x_{ x },
 	y_{ y },
-	onGround{ false }
+	onGround{ false },
+	alive{ true },
+	health{ 2 }
 {
 	sprite_.reset(new Sprite(graphics, "resources/sprites/enemy.bmp", 0, 0, 32, 32));
 	playerLocation = { 0, 0 };
@@ -54,7 +56,7 @@ void Enemy::takeDamage(int damage)
 {
 	health -= damage;
 	if(health <= 0) {
-		//Alive = false?
+		alive = false;
 	}
 }
 
