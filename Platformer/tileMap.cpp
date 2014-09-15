@@ -82,30 +82,22 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	return map;
 }
 
-std::vector<BoundingBox> TileMap::getCollisionTilesTest(const BoundingBox& box) const
+std::vector<TileMap::CollisionTile> TileMap::getCollisionTilesTest(const BoundingBox& box) const
 {
-	std::vector<BoundingBox> collisionTiles;
+	std::vector<CollisionTile> collisionTiles;
 
 	//TODO - Optimise later - notably find the area around the "potentially" colliding box
 
-	const int first_row = static_cast<unsigned int>(box.top() / 32);
-	const int last_row  = static_cast<unsigned int>(box.bottom() / 32);
-	const int first_col = static_cast<unsigned int>(box.left() / 32);
-	const int last_col  = static_cast<unsigned int>(box.right() / 32);
+	const int first_row = box.top() / 32;
+	const int last_row  = box.bottom() / 32;
+	const int first_col = box.left() / 32;
+	const int last_col  = box.right() / 32;
 
-	std::cout << "----" << std::endl;
-	std::cout << first_row << std::endl;
-	std::cout << last_row << std::endl;
-	std::cout << first_col << std::endl;
-	std::cout << last_col << std::endl;
-	std::cout << "----" << std::endl;
-
-	for (unsigned int i = first_row; i <= last_row; ++i) {
-		for (unsigned int j = first_col; j <= last_col; ++j) {
-			collisionTiles.emplace_back(BoundingBox{ static_cast<float>(j * 32), static_cast<float>(i * 32) });
+	for (int i = first_row; i <= last_row; ++i) {
+		for (int j = first_col; j <= last_col; ++j) {
+			collisionTiles.emplace_back(CollisionTile{ j, i, mapTiles[i][j].type_ });
 		}
 	}
-
 	return collisionTiles;
 }
 

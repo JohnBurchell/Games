@@ -18,14 +18,17 @@ void Projectile::update(uint32_t time_ms, const TileMap& map)
 {
 	float delta = velocity_ * time_ms;
 
-	auto collidingTiles = map.getCollisionTiles();
-	auto result = getCollisionResult(collidingTiles, getDamageRectangle());
+	auto result = map.getCollisionTilesTest(getDamageRectangle(delta));
+	auto collisionResult = getCollisionResult(result, getDamageRectangle(delta));
 
-	if(result.collided) {
+	if (collisionResult.collided) {
 		collided = true;
+		x_ = collisionResult.x - getDamageRectangle(delta).width();
+		system("pause");
 	}
-
-	x_ += delta;
+	else {
+		x_ += delta;
+	}
 }
 
 bool Projectile::hasCollided() const
@@ -38,19 +41,26 @@ void Projectile::collision()
 	collided = true;
 }
 
-BoundingBox Projectile::getDamageRectangle() const
+BoundingBox Projectile::getDamageRectangle(float delta) const
 {
-	return BoundingBox{ x_ + 16, y_ + 5, 16, 5 };
+	if (delta < 0)
+	{
+		return BoundingBox{ x_ + 16, y_ + 5, 16 + delta, 5 };
+	}
+	else
+	{
+		return BoundingBox{ x_ + 16, y_ + 5 + delta, 16 - delta, 5 };
+	}
 }
 
-Projectile::CollisionResult Projectile::getCollisionResult(std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
+Projectile::CollisionResult Projectile::getCollisionResult(std::vector<TileMap::CollisionTile>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 	for (auto& x : collisionTiles) {
-		if (box.boxCollision(x)) {
+		if (x.type_ == TileMap::TileType::WALL) {
 			result.collided = true;
-			result.x = x.left();
-			result.y = x.top();
+			result.x = x.x_;
+			result.y = x.y_;
 			break;
 		}
 	}

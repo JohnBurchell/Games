@@ -21,7 +21,7 @@ class Projectile
 		void draw(Graphics& graphics, float cameraX, float cameraY);
 		void update(uint32_t time_ms, const TileMap& map);
 	
-		BoundingBox getDamageRectangle() const;
+		BoundingBox getDamageRectangle(float delta) const;
 
 		inline float getPos() { return x_; };
 
@@ -38,7 +38,7 @@ class Projectile
 			bool collided;
 		};
 
-		CollisionResult getCollisionResult(std::vector<BoundingBox>& collisionTiles, const BoundingBox& box);
+		CollisionResult getCollisionResult(std::vector<TileMap::CollisionTile>& collisionTiles, const BoundingBox& box);
 
 		std::shared_ptr<Sprite> sprite_;
 };

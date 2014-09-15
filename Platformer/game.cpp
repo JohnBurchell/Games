@@ -12,6 +12,12 @@ class Player;
 class Enemy;
 class Projectile;
 
+namespace
+{
+	const int FPS = 60;
+	const int MAX_FRAME_TIME = 5 * 1000 / 60;
+}
+
 Game::Game()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -53,7 +59,11 @@ void Game::run()
 
 	uint32_t previousFrameTime = SDL_GetTicks();
 
-	for (;;) {
+	static int framecount = 0;
+	static auto startTime = SDL_GetTicks();
+
+	while(true) {
+		++framecount;
 
 		uint32_t frameStart = SDL_GetTicks();
 
@@ -80,7 +90,7 @@ void Game::run()
 									   player->getXpos(), 
 									   player->getYpos(),
 									   //Dirty - But it'll do for now
-									   player->getVelocity() >= 0 ? 0.5f : -0.5f));
+									   player->getVelocity() >= 0 ? 0.6f : -0.6f));
 					break;
 				case SDLK_F12:
 					player->enableDebug();
@@ -102,19 +112,22 @@ void Game::run()
 		}
 
 		uint32_t currentTime = SDL_GetTicks();
-		uint32_t timeSpentThisFrame = currentTime - previousFrameTime;
+		const int timeSpentThisFrame = currentTime - previousFrameTime;
 
-		update(timeSpentThisFrame);
+		update(std::min(timeSpentThisFrame, MAX_FRAME_TIME));
 		updateCamera(camera);
+
+		previousFrameTime = currentTime;
+
 		draw(graphics, camera);
-		
-		previousFrameTime = SDL_GetTicks();
 
-		uint32_t target_ms = 1000 / 60;
+		uint32_t target_ms = 1000 / FPS;
+		const int elapsedTime = SDL_GetTicks() - frameStart;
+		const auto test = SDL_GetTicks() - startTime;
 
-		while (timeSpentThisFrame < target_ms) {
+		if (elapsedTime < target_ms) {
 			//Do nothing - Waste time to reach limit frame rate.
-			timeSpentThisFrame = SDL_GetTicks() - frameStart;
+			SDL_Delay(target_ms - elapsedTime);
 		}
 	}
 }
@@ -135,14 +148,9 @@ void Game::update(uint32_t time_ms)
 		x->update(time_ms, *map);
 
 		for(auto& y : enemies) {
-			if(y->getDamageRectangle().boxCollision(x->getDamageRectangle())){
+			if(y->getDamageRectangle().boxCollision(x->getDamageRectangle(0))){
 				y->takeDamage();
 				x->collision();
-			}
-
-			if (player->getDamageRectangle().boxCollision(y->getDamageRectangle())) {
-				//This check might not be needed, not sure if enemies are going to shoot at all.
-				player->takeDamage();
 			}
 		}
 	}

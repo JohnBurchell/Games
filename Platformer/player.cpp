@@ -10,14 +10,14 @@ using std::vector;
 
 namespace {
 
-	constexpr float JUMP_SPEED = 0.25f;
+	constexpr float INITIAL_JUMP_VELOCITY = 0.35f;
 
-	constexpr float INITIAL_JUMP_VELOCITY = -0.85f;
+	constexpr float GRAVITY = 0.00089f;
+	constexpr float MAX_Y_SPEED = 0.5f;
+	constexpr float JUMP_GRAVITY = 0.00025f;
 
-	constexpr float GRAVITY = 0.00345f;
-
-	constexpr float Y_TARGETSPEED = 0.55f;
-	constexpr float X_TARGETSPEED = 0.25f;
+	constexpr float Y_TARGETSPEED = 0.9f;
+	constexpr float X_TARGETSPEED = 0.24f;
 
 	//The boxes should be a little bit bigger than the player sprite
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
@@ -76,8 +76,9 @@ void Player::enableDebug()
 
 void Player::startJump()
 {
-	if (onGround) {
-		yVelocity = INITIAL_JUMP_VELOCITY;
+	if (onGround && !jumping) {
+		yVelocity = -INITIAL_JUMP_VELOCITY;
+		jumping = true;
 	}
 }
 
@@ -184,8 +185,8 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	//velocity += acceleration * deltaTime
 	float acceleration_x_ = 0.0f;
 
-	if (accelerationX < 0) acceleration_x_ = onGround ? -0.54f : -0.14f;
-	else if (accelerationX > 0) acceleration_x_ = onGround ? 0.54f : 0.14f;
+	if (accelerationX < 0) acceleration_x_ = onGround ? -X_TARGETSPEED : -X_TARGETSPEED;
+	else if (accelerationX > 0) acceleration_x_ = onGround ? X_TARGETSPEED : X_TARGETSPEED;
 
 	xVelocity += acceleration_x_ * time_ms;
 
@@ -223,11 +224,10 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 
 void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 {
-	float yAcceleration = jumping && yVelocity < 0.0f ? INITIAL_JUMP_VELOCITY : GRAVITY;
+	float yAcceleration = jumping && yVelocity < 0.0f ? GRAVITY : GRAVITY;
 	
-	yVelocity = std::min(yVelocity + yAcceleration * time_ms, Y_TARGETSPEED);
+	yVelocity = std::min(yVelocity + yAcceleration * time_ms, MAX_Y_SPEED);
 
-	//Implies falling
 	float delta = yVelocity * time_ms;
 
 	debugDelta = delta;
@@ -240,6 +240,7 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 			y_ = result.y - Y_BOX.bottom();
 			yVelocity = 0.0f;
 			onGround = true;
+			jumping = false;
 		}
 		else {
 			y_ += delta;

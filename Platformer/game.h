@@ -8,8 +8,13 @@
 #include "enemy.h"
 #include "projectile.h"
 
+#ifdef _WIN32
+#include <SDL.h>
+#endif
 
+#ifdef __linux__
 #include <SDL2/SDL.h>
+#endif
 
 class TileMap;
 class Player;

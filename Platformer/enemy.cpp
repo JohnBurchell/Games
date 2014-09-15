@@ -1,8 +1,6 @@
 #include "enemy.h"
 #include "player.h"
 
-//TODO - Add more enemies if wanted
-
 class Graphics;
 class TileMap;
 class Sprite;
@@ -65,16 +63,8 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	//TODO - Improve, add collision for the enemy
 	float yVelocity = 0.0f;
 
-	//Player is above the enemy
-	//if (playerLocation.playerY < y_) {
-	//	yVelocity = -CHASE_SPEED;
-	//}
-	//else if (playerLocation.playerY > y_) {
-	//	yVelocity = CHASE_SPEED;
-	//}
-
 	if (!onGround) {
-		yVelocity = 0.25f;
+		yVelocity = 0.55f;
 	}
 
 	float delta = yVelocity * time_ms;
