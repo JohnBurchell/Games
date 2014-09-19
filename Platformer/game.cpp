@@ -1,6 +1,7 @@
 #include "game.h"
 #include "graphics.h"
 #include "sprite.h"
+#include "testEnemy.h"
 
 #include <algorithm>
 #include <memory>
@@ -11,6 +12,7 @@ class Sprite;
 class Player;
 class Enemy;
 class Projectile;
+class TestEnemy;
 
 namespace
 {
