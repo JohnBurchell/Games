@@ -5,10 +5,10 @@
 
 class TestEnemy : public MoveableEntity
 {
-	TestEnemy();
+public:
+	TestEnemy(Graphics& graphics);
 
 	void update(float time_ms) override;
-	void execute() override;
 	void draw() override;
 };
 

@@ -15,10 +15,9 @@ public:
 	MoveableEntity() {};
 	~MoveableEntity() {};
 
-//Why protected?
 protected:
 
-	Graphics* graphics;
+	Graphics* graphics_;
 	std::unique_ptr<Sprite> sprite_;
 };
 

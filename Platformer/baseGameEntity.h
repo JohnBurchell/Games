@@ -8,7 +8,6 @@ public:
 
 	virtual ~BaseGameEntity() {};
 
-	virtual void execute() = 0;
 	virtual void update(float elapsed_time) = 0;
 	virtual void draw() = 0;
 

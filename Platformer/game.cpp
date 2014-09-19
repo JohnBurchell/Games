@@ -57,6 +57,8 @@ void Game::run()
 
 	map.reset(map->generateDebugMap(graphics));
 
+	TestEnemy test(graphics);
+
 	Camera camera { Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT };
 
 	uint32_t previousFrameTime = SDL_GetTicks();
@@ -122,6 +124,7 @@ void Game::run()
 		previousFrameTime = currentTime;
 
 		draw(graphics, camera);
+		test.draw();
 
 		uint32_t target_ms = 1000 / FPS;
 		const int elapsedTime = SDL_GetTicks() - frameStart;
