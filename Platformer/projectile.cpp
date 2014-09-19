@@ -24,7 +24,6 @@ void Projectile::update(uint32_t time_ms, const TileMap& map)
 	if (collisionResult.collided) {
 		collided = true;
 		x_ = collisionResult.x - getDamageRectangle(delta).width();
-		system("pause");
 	}
 	else {
 		x_ += delta;

@@ -29,10 +29,10 @@ void Enemy::draw(Graphics& graphics, float cameraX, float cameraY)
 {
 	sprite_->draw(graphics, x_ - cameraX, y_ - cameraY);
 
-	BoundingBox y = { x_ + Y_BOX.left(), y_ + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
-	BoundingBox x = { x_ + X_BOX.left(), y_ + X_BOX.top(), X_BOX.width(), X_BOX.height() };
-	y.draw(graphics, cameraX, cameraY, 4);
-	x.draw(graphics, cameraX, cameraY, 4);
+	// BoundingBox y = { x_ + Y_BOX.left(), y_ + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
+	// BoundingBox x = { x_ + X_BOX.left(), y_ + X_BOX.top(), X_BOX.width(), X_BOX.height() };
+	// y.draw(graphics, cameraX, cameraY, 4);
+	// x.draw(graphics, cameraX, cameraY, 4);
 }
 
 void Enemy::update(const uint32_t time_ms, TileMap& map)

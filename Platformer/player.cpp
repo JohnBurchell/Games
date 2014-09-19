@@ -19,6 +19,9 @@ namespace {
 	constexpr float Y_TARGETSPEED = 0.9f;
 	constexpr float X_TARGETSPEED = 0.24f;
 
+	//Values for invulnerability
+	constexpr float timeInvulnerable = 3.0f;
+
 	//The boxes should be a little bit bigger than the player sprite
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
 	BoundingBox X_BOX = { 6, 10, 20, 12 };
@@ -31,9 +34,12 @@ Player::Player(Graphics& graphics, float x, float y) :
 	xVelocity{ 0.0f },
 	yVelocity{ 0.0f },
 	accelerationX{ 0 },
+	health{ 10 },
 	debug{ false },
 	jumping{ false },
-	debugDelta{ 0.0f }
+	invulnerable{ false },
+	debugDelta{ 0.0f },
+	invulnTime{ 300.0f }
 {
 	sprite.reset(new Sprite(graphics, "resources/sprites/player.bmp", 0, 0, 32, 32));
 }
@@ -116,6 +122,16 @@ void Player::update(uint32_t time_ms, TileMap& map)
 
 	updateY(time_ms, collisionTiles);
 	updateX(time_ms, collisionTiles);
+
+
+	if(invulnerable && invulnTime > 0.0f)
+	{
+		invulnTime -= time_ms;
+	}
+	else
+	{
+		invulnerable = false;
+	}
 }
 
 BoundingBox Player::leftCollisionBox(float delta) const
@@ -176,6 +192,24 @@ BoundingBox Player::getDamageRectangle()
 
 void Player::takeDamage()
 {
+	if(health <= 0 && !invulnerable)
+	{
+		std::cout << "Dead" << std::endl;
+	}
+	else if(!invulnerable)
+	{	
+		health -= 1;
+		//Take damage
+		//Knockback? Away?
+		//Flash?
+		invulnerable = true;
+		invulnTime = 300.0f;
+	}
+	else 
+	{
+		//Do nothing, maybe some update?
+		std::cout << "CAN'T TOUCH THIS" << std::endl;
+	}
 }
 
 void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
@@ -258,6 +292,7 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		}
 		else {
 			y_ += delta;
+			onGround = false;
 		}
 	}
 }

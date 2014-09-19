@@ -46,8 +46,9 @@ class Player : public Actor
 
 		float x_, y_;
 		float xVelocity, yVelocity;
-		int accelerationX;
-		bool onGround, jumping;
+		int accelerationX, health;
+		bool onGround, jumping, invulnerable;
+		float invulnTime;
 
 		friend bool operator<(Player& a, Player& b);
 

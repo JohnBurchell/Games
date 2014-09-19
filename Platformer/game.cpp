@@ -155,6 +155,14 @@ void Game::update(uint32_t time_ms)
 		}
 	}
 
+	for(auto& x : enemies)
+	{
+		if(player->getDamageRectangle().boxCollision(x->getDamageRectangle()))
+		{
+			player->takeDamage();
+		}
+	}
+
 	auto predicate = [=](std::unique_ptr<Projectile>& a) { return a->hasCollided(); };
 	auto predicateEnemy = [=](std::unique_ptr<Enemy>& a) { return !a->isAlive(); };
 
