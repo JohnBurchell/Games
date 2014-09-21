@@ -88,10 +88,10 @@ std::vector<TileMap::CollisionTile> TileMap::getCollisionTilesTest(const Boundin
 
 	//TODO - Optimise later - notably find the area around the "potentially" colliding box
 
-	const int first_row = box.top() / 32;
-	const int last_row  = box.bottom() / 32;
-	const int first_col = box.left() / 32;
-	const int last_col  = box.right() / 32;
+	const int first_row = static_cast<int>(box.top() / 32);
+	const int last_row = static_cast<int>(box.bottom() / 32);
+	const int first_col = static_cast<int>(box.left() / 32);
+	const int last_col = static_cast<int>(box.right() / 32);
 
 	for (int i = first_row; i <= last_row; ++i) {
 		for (int j = first_col; j <= last_col; ++j) {

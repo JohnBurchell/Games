@@ -29,8 +29,7 @@ namespace {
 
 Player::Player(Graphics& graphics, float x, float y) :
 
-	x_{ x },
-	y_{ y },
+	position{ x, y },
 	xVelocity{ 0.0f },
 	yVelocity{ 0.0f },
 	accelerationX{ 0 },
@@ -46,7 +45,7 @@ Player::Player(Graphics& graphics, float x, float y) :
 
 void Player::draw(Graphics& graphics, float cameraX, float cameraY)
 {
-	sprite->draw(graphics, x_ - cameraX, y_ - cameraY);
+	sprite->draw(graphics, position.x - cameraX, position.y - cameraY);
 
 	if (debug) {
 		for (auto& x : debugTiles) {
@@ -66,8 +65,8 @@ void Player::draw(Graphics& graphics, float cameraX, float cameraY)
 		//	bottom.draw(graphics, cameraX, cameraY, 4);
 		//}
 
-		BoundingBox y = { x_ + Y_BOX.left(), y_ + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
-		BoundingBox x = { x_ + X_BOX.left(), y_ + X_BOX.top(), X_BOX.width(), X_BOX.height() };
+		BoundingBox y = { position.x + Y_BOX.left(), position.y + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
+		BoundingBox x = { position.x + X_BOX.left(), position.y + X_BOX.top(), X_BOX.width(), X_BOX.height() };
 		y.draw(graphics, cameraX, cameraY, 2);
 		x.draw(graphics, cameraX, cameraY, 2);
 		//Damage rectangle below.
@@ -137,8 +136,8 @@ void Player::update(uint32_t time_ms, TileMap& map)
 BoundingBox Player::leftCollisionBox(float delta) const
 {
 	return BoundingBox{ 
-		x_ + X_BOX.left() + delta, 
-		y_ + X_BOX.top(), 
+		position.x + X_BOX.left() + delta,
+		position.y + X_BOX.top(),
 		X_BOX.width() / 2 - delta, 
 		X_BOX.height() };
 }
@@ -146,8 +145,8 @@ BoundingBox Player::leftCollisionBox(float delta) const
 BoundingBox Player::rightCollisionBox(float delta) const
 {
 	return BoundingBox{ 
-		x_ + + X_BOX.left() + X_BOX.width() / 2, 
-		y_ + X_BOX.top(), 
+		position.x + +X_BOX.left() + X_BOX.width() / 2,
+		position.y + X_BOX.top(),
 		X_BOX.width() / 2 + delta, 
 		X_BOX.height()};
 }
@@ -155,8 +154,8 @@ BoundingBox Player::rightCollisionBox(float delta) const
 BoundingBox Player::topCollisionBox(float delta) const
 {
 	return BoundingBox{ 
-		x_ + Y_BOX.left(), 
-		y_ + Y_BOX.top() + delta, 
+		position.x + Y_BOX.left(),
+		position.y + Y_BOX.top() + delta,
 		Y_BOX.width(), 
 		Y_BOX.height() / 2 - delta};
 }
@@ -164,8 +163,8 @@ BoundingBox Player::topCollisionBox(float delta) const
 BoundingBox Player::bottomCollisionBox(float delta) const
 {
 	return BoundingBox{ 
-		x_ + Y_BOX.left(), 
-		y_ + Y_BOX.top() + Y_BOX.height() / 2, 
+		position.x + Y_BOX.left(),
+		position.y + Y_BOX.top() + Y_BOX.height() / 2,
 		Y_BOX.width(),
 		Y_BOX.height() / 2 + delta};
 }
@@ -187,7 +186,7 @@ Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& col
 
 BoundingBox Player::getDamageRectangle()
 {
-	return { x_ + X_BOX.left(), y_ + Y_BOX.top(), X_BOX.width(), Y_BOX.height() };
+	return{ position.x + X_BOX.left(), position.y + Y_BOX.top(), X_BOX.width(), Y_BOX.height() };
 }
 
 void Player::takeDamage()
@@ -236,10 +235,10 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 
 		if (result.collided) {
 			xVelocity = 0.0f;
-			x_ = result.x - X_BOX.right();
+			position.x = result.x - X_BOX.right();
 		}
 		else {
-			x_ += delta;
+			position.x += delta;
 		}
 	}
 	//Going left
@@ -248,10 +247,10 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 
 		if (result.collided) {
 			xVelocity = 0.0f;
-			x_ = result.x + X_BOX.right();
+			position.x = result.x + X_BOX.right();
 		}
 		else {
-			x_ += delta;
+			position.x += delta;
 		}
 	}
 }
@@ -271,13 +270,13 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, bottomCollisionBox(delta));
 
 		if (result.collided) {
-			y_ = result.y - Y_BOX.bottom();
+			position.y = result.y - Y_BOX.bottom();
 			yVelocity = 0.0f;
 			onGround = true;
 			jumping = false;
 		}
 		else {
-			y_ += delta;
+			position.y += delta;
 			onGround = false;
 		}
 	}
@@ -286,12 +285,12 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
 
 		if (result.collided) {
-			y_ = result.y + Y_BOX.height();
+			position.y = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 			onGround = true;
 		}
 		else {
-			y_ += delta;
+			position.y += delta;
 			onGround = false;
 		}
 	}

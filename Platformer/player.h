@@ -21,8 +21,7 @@ class Player : public Actor
 
 		BoundingBox getDamageRectangle();
 
-		inline float getXpos() { return x_; };
-		inline float getYpos() { return y_; };
+		inline const vector2d getPosition() const { return position; };
 
 		//Remove - Replace with sprite facing when animation is implemented?
 		inline float getVelocity() { return xVelocity; };
@@ -38,13 +37,14 @@ class Player : public Actor
 
 	private:
 
+		vector2d position;
+
 		struct CollisionResult
 		{
 			float x, y;
 			bool collided;
 		};
 
-		float x_, y_;
 		float xVelocity, yVelocity;
 		int accelerationX, health;
 		bool onGround, jumping, invulnerable;

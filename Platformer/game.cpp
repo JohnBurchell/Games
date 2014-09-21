@@ -1,7 +1,6 @@
 #include "game.h"
 #include "graphics.h"
 #include "sprite.h"
-#include "testEnemy.h"
 
 #include <algorithm>
 #include <memory>
@@ -30,8 +29,9 @@ Game::Game()
 
 void Game::updateCamera(Camera& camera)
 {
-	camera.x = (player->getXpos() + Constants::TILE_WIDTH - Constants::SCREEN_WIDTH / 2);
-	camera.y = (player->getYpos() + Constants::TILE_HEIGHT - Constants::SCREEN_HEIGHT / 2);
+	auto position = player->getPosition();
+	camera.x = (position.x + Constants::TILE_WIDTH - Constants::SCREEN_WIDTH / 2);
+	camera.y = (position.y + Constants::TILE_HEIGHT - Constants::SCREEN_HEIGHT / 2);
 
 	if (camera.x < 0) {
 		camera.x = 0;
@@ -57,21 +57,20 @@ void Game::run()
 
 	map.reset(map->generateDebugMap(graphics));
 
-	TestEnemy test(graphics);
-
 	Camera camera { Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT };
 
 	uint32_t previousFrameTime = SDL_GetTicks();
 
-	static int framecount = 0;
 	static auto startTime = SDL_GetTicks();
 
 	while(true) {
-		++framecount;
 
 		uint32_t frameStart = SDL_GetTicks();
 
 		SDL_Event e;
+
+		//This is bad - Consider having something observe the player report on movements?
+		auto pos = player->getPosition();
 
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_KEYDOWN){
@@ -91,13 +90,15 @@ void Game::run()
 				case SDLK_RETURN:
 					projectiles.emplace_back( 
 						new Projectile(graphics, 
-									   player->getXpos(), 
-									   player->getYpos(),
-									   //Dirty - But it'll do for now
+									   pos.x, 
+									   pos.y,
 									   player->getVelocity() >= 0 ? 0.6f : -0.6f));
 					break;
 				case SDLK_F12:
 					player->enableDebug();
+					break;
+				case SDLK_q:
+					enemies[0]->isInLineOfSight(player->getPosition(), enemies[0]->getPosition());
 					break;
 				case SDLK_ESCAPE:
 					exit(0);
@@ -122,9 +123,7 @@ void Game::run()
 		updateCamera(camera);
 
 		previousFrameTime = currentTime;
-
 		draw(graphics, camera);
-		test.draw();
 
 		uint32_t target_ms = 1000 / FPS;
 		const int elapsedTime = SDL_GetTicks() - frameStart;
@@ -140,12 +139,10 @@ void Game::run()
 void Game::update(uint32_t time_ms)
 {
 	player->update(time_ms, *map);
-
-	auto playerX = player->getXpos();
-	auto playerY = player->getYpos();
+	auto pos = player->getPosition();
 
 	for(auto& x : enemies) {
-		x->updatePlayerData(playerX, playerY);
+		x->updatePlayerData(pos.x, pos.y);
 		x->update(time_ms, *map);
 	}
 
@@ -190,7 +187,7 @@ void Game::draw(Graphics& graphics, Camera& camera)
 	}
 
 	for(auto& x : enemies) {
-		x->draw(graphics, camera.x, camera.y);
+		x->draw(camera.x, camera.y);
 	}
 
 	graphics.flip();

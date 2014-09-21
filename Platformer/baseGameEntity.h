@@ -1,6 +1,11 @@
 #ifndef BASE_GAME_ENTITY
 #define BASE_GAME_ENTITY
 
+#include "common.h"
+#include "tileMap.h"
+
+class TileMap;
+
 class BaseGameEntity
 {
 
@@ -8,8 +13,8 @@ public:
 
 	virtual ~BaseGameEntity() {};
 
-	virtual void update(float elapsed_time) = 0;
-	virtual void draw() = 0;
+	virtual void update(uint32_t elapsed_time, TileMap& map) = 0;
+	virtual void draw(float cameraX, float cameraY) = 0;
 
 };
 

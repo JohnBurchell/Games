@@ -26,7 +26,12 @@ class Graphics
 		
 		//REMOVE LATER - Debugging
 		void render_rectanlge(const int pos_x, const int pos_y, const int colour, int width = 32, int height = 32);
+		void renderLine(int originX, int originY, int targetX, int targetY);
 
+		class Renderer_Error{};
+		class Window_Error{};
+		class Texture_Error{};
+		class Surface_Error{};
 
 		void flip();
 		void clear();
@@ -35,10 +40,7 @@ class Graphics
 		SDL_Window* window;
 		SDL_Renderer* renderer;
 
-		class Renderer_Error{};
-		class Window_Error{};
-		class Texture_Error{};
-		class Surface_Error{};
+
 
 		//Unordered map used as I don't care about order, but only want the associativity given by a map structure.
 		std::unordered_map<std::string, SDL_Texture*> loadedImages;

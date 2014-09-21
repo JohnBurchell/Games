@@ -1,10 +1,5 @@
 #include "enemy.h"
-#include "player.h"
-
-class Graphics;
-class TileMap;
-class Sprite;
-class Player;
+#include "enemyStates.h"
 
 namespace {
 
@@ -12,31 +7,100 @@ namespace {
 
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
 	BoundingBox X_BOX = { 6, 10, 20, 12 };
+
+	constexpr int START_HP = 3;
 }
+
+class TileMap;
 
 Enemy::Enemy(Graphics& graphics, float x, float y) :
-	x_{ x },
-	y_{ y },
+	velocityX{ 0.0f },
+	position{ x, y },
+	health{ START_HP },
 	onGround{ false },
 	alive{ true },
-	health{ 2 }
+	currentState{ new IdleState }
+
 {
+	graphics_ = &graphics;
+	if (graphics_ == nullptr)
+	{
+		throw Graphics::Texture_Error();
+	}
 	sprite_.reset(new Sprite(graphics, "resources/sprites/enemy.bmp", 0, 0, 32, 32));
-	playerLocation = { 0, 0 };
 }
 
-void Enemy::draw(Graphics& graphics, float cameraX, float cameraY)
+void Enemy::draw(float cameraX, float cameraY)
 {
-	sprite_->draw(graphics, x_ - cameraX, y_ - cameraY);
-
-	// BoundingBox y = { x_ + Y_BOX.left(), y_ + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
-	// BoundingBox x = { x_ + X_BOX.left(), y_ + X_BOX.top(), X_BOX.width(), X_BOX.height() };
-	// y.draw(graphics, cameraX, cameraY, 4);
-	// x.draw(graphics, cameraX, cameraY, 4);
+	//Potential cache miss?
+	sprite_->draw(*graphics_, position.x - cameraX, position.y - cameraY);
+	graphics_->renderLine(position.x - cameraX, position.y - cameraY, playerLocation.playerX - cameraX, playerLocation.playerY - cameraY);
 }
 
-void Enemy::update(const uint32_t time_ms, TileMap& map)
+bool Enemy::isInLineOfSight(float x1, float y1, float x2, float y2)
 {
+	//int deltaX = pointB.x - pointA.x;
+	//int deltaY = pointB.y - pointA.y;
+
+	bool steep = (fabs(pointB.y - pointA.y) > fabs(pointB.x - pointA.x));
+
+	if (steep)
+	{
+
+	}
+
+	if (pointA.x > pointB.x)
+	{
+
+	}
+
+	float x0, x1, y0, y1;
+	x0 = pointA.x;
+	y0 = pointA.y;
+	x1 = pointB.x;
+	y1 = pointB.y;
+
+	int deltaX = x1 - x0;
+	int deltaY = y1 - y0;
+
+	std::vector<Point> points;
+
+	double error = 0;
+	double deltaerr = abs(deltaY / deltaX);
+	
+	int y = y0;
+	int ystep = y0 < y1 ? 1 : -1;
+
+	std::cout << deltaX << " | " << deltaY << std::endl;
+	std::cout << pointA.x << " | " << pointB.x << std::endl;
+
+	for (int x = x0; x <= x1; ++x)
+	{
+		points.push_back({ x, y });
+		error += deltaY;
+		if (2 * error >= deltaX)
+		{
+			y += ystep;
+			error -= deltaX;
+		}
+
+	}
+
+	std::cout << points.size() << std::endl;
+	return false;
+}
+
+void Enemy::changeState(State<Enemy>* newState)
+{
+	currentState->exit(this);
+	currentState = newState;
+	currentState->enter(this);
+}
+
+void Enemy::update(uint32_t time_ms, TileMap& map)
+{
+	currentState->execute(this);
+
 	//TODO - If i optimise the collection of tiles, this won't be that expensive!
 	std::vector<BoundingBox> collisionTiles = map.getCollisionTiles();
 
@@ -53,7 +117,7 @@ void Enemy::updatePlayerData(float x, float y)
 void Enemy::takeDamage(int damage)
 {
 	health -= damage;
-	if(health <= 0) {
+	if (health <= 0) {
 		alive = false;
 	}
 }
@@ -74,12 +138,12 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 		auto result = getCollisionResult(collisionTiles, bottomCollisionBox(delta));
 
 		if (result.collided) {
-			y_ = result.y - Y_BOX.bottom();
+			position.y = result.y - Y_BOX.bottom();
 			yVelocity = 0.0f;
 			onGround = true;
 		}
 		else {
-			y_ += delta;
+			position.y += delta;
 			onGround = false;
 		}
 	}
@@ -88,41 +152,61 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
 
 		if (result.collided) {
-			y_ = result.y + Y_BOX.height();
+			position.y = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 		}
 		else {
-			y_ += delta;
+			position.y += delta;
 			onGround = false;
 		}
 	}
 }
 
-void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+void Enemy::flee()
 {
-	float xVelocity = 0.0f;
+	if (playerLocation.playerX < x_)
+	{
+		velocityX = CHASE_SPEED;
+	}
+	else
+	{
+		velocityX = -CHASE_SPEED;
+	}
+}
+
+void Enemy::chase()
+{
+	std::cout << position.length() << std::endl; 
 
 	//Player is to the left of the enemy
-	if (playerLocation.playerX < x_) {
-		xVelocity = -CHASE_SPEED;
+	if (playerLocation.playerX < position.x) {
+		velocityX = -CHASE_SPEED;
 	}
 	//Player to the right
-	else if (playerLocation.playerX > x_) {
-		xVelocity = CHASE_SPEED;
+	else if (playerLocation.playerX > position.x) {
+		velocityX = CHASE_SPEED;
 	}
+}
 
-	float delta = xVelocity * time_ms;
+void Enemy::seek()
+{
+
+}
+
+void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
+{
+	float delta = velocityX * time_ms;
 
 	//Going to the right
 	if (delta > 0.0f) {
 		auto result = getCollisionResult(collisionTiles, rightCollisionBox(delta));
 
 		if (result.collided) {
-			xVelocity = 0.0f;
-			x_ = result.x - X_BOX.right();
+			velocityX = 0.0f;
+			position.x = result.x - X_BOX.right();
 		}
 		else {
-			x_ += delta;
+			position.x += delta;
 		}
 	}
 	//Going left
@@ -130,11 +214,11 @@ void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 		auto result = getCollisionResult(collisionTiles, leftCollisionBox(delta));
 
 		if (result.collided) {
-			xVelocity = 0.0f;
-			x_ = result.x + X_BOX.right();
+			velocityX = 0.0f;
+			position.x = result.x + X_BOX.right();
 		}
 		else {
-			x_ += delta;
+			position.x += delta;
 		}
 	}
 }
@@ -142,8 +226,8 @@ void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 BoundingBox Enemy::leftCollisionBox(float delta) const
 {
 	return BoundingBox{
-		x_ + X_BOX.left() + delta,
-		y_ + X_BOX.top(),
+		position.x + X_BOX.left() + delta,
+		position.y + X_BOX.top(),
 		X_BOX.width() / 2 - delta,
 		X_BOX.height() };
 }
@@ -151,8 +235,8 @@ BoundingBox Enemy::leftCollisionBox(float delta) const
 BoundingBox Enemy::rightCollisionBox(float delta) const
 {
 	return BoundingBox{
-		x_ + +X_BOX.left() + X_BOX.width() / 2,
-		y_ + X_BOX.top(),
+		position.x + +X_BOX.left() + X_BOX.width() / 2,
+		position.y + X_BOX.top(),
 		X_BOX.width() / 2 + delta,
 		X_BOX.height() };
 }
@@ -160,8 +244,8 @@ BoundingBox Enemy::rightCollisionBox(float delta) const
 BoundingBox Enemy::topCollisionBox(float delta) const
 {
 	return BoundingBox{
-		x_ + Y_BOX.left(),
-		y_ + Y_BOX.top() + delta,
+		position.x + Y_BOX.left(),
+		position.y + Y_BOX.top() + delta,
 		Y_BOX.width(),
 		Y_BOX.height() / 2 - delta };
 }
@@ -169,8 +253,8 @@ BoundingBox Enemy::topCollisionBox(float delta) const
 BoundingBox Enemy::bottomCollisionBox(float delta) const
 {
 	return BoundingBox{
-		x_ + Y_BOX.left(),
-		y_ + Y_BOX.top() + Y_BOX.height() / 2,
+		position.x + Y_BOX.left(),
+		position.y + Y_BOX.top() + Y_BOX.height() / 2,
 		Y_BOX.width(),
 		Y_BOX.height() / 2 + delta };
 }
@@ -192,8 +276,9 @@ Enemy::CollisionResult Enemy::getCollisionResult(const std::vector<BoundingBox>&
 
 BoundingBox Enemy::getDamageRectangle()
 {
-	return{ x_ + X_BOX.left(), y_ + Y_BOX.top(), X_BOX.width(), X_BOX.height() };
+	return{ position.x + X_BOX.left(), position.y + Y_BOX.top(), X_BOX.width(), X_BOX.height() };
 }
+
 
 Enemy::~Enemy()
 {

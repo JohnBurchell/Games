@@ -1,65 +1,80 @@
-#ifndef ENEMY_H_
-#define ENEMY_H_
-
-#ifdef _WIN32
-#pragma once
-#endif
+#ifndef TEST_ENEMY
+#define TEST_ENEMY
 
 #include "common.h"
-#include "actor.h"
+#include "moveableEntity.h"
+#include "state.h"
+#include "boundingBox.h"
 
-class Graphics;
 class TileMap;
-class Sprite;
 
-class Enemy : Actor
+class Enemy : public MoveableEntity
 {
-	public:
-		Enemy(Graphics& graphics, float x, float y);
-		~Enemy() override;
+public:
+	Enemy(Graphics& graphics, float x, float y);
+	~Enemy();
 
-		void draw(Graphics& graphics, float x, float y) override;
-		void update(const uint32_t time, TileMap& map) override;
+	void update(uint32_t time_ms, TileMap& map) override;
+	void draw(float cameraX, float cameraY) override;
 
-		inline bool isAlive() { return alive; };
-		void takeDamage(int damage = 1);
+	void changeState(State<Enemy>* test);
+	void revertToPreviousState();
 
-		void updatePlayerData(float x, float y);
-		BoundingBox getDamageRectangle();
+	inline bool isAlive() { return alive; };
+	inline int getHealth() { return health; };
+	void takeDamage(int damage = 1);
 
-	private:
+	inline const vector2d getPosition() const { return position; };
 
-		void updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
-		void updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
-		bool onGround, alive;
+	bool isInLineOfSight(const vector2d& pointA, const vector2d& pointB);
 
-		struct CollisionResult
-		{
-			float x, y;
-			bool collided;
-		};
+	void flee();
+	void seek();
+	void chase();
 
-		BoundingBox rightCollisionBox(float delta) const;
-		BoundingBox leftCollisionBox(float delta) const;
-		BoundingBox topCollisionBox(float delta) const;
-		BoundingBox bottomCollisionBox(float delta) const;
+	void updatePlayerData(float x, float y);
+	BoundingBox getDamageRectangle();
 
+private:
 
-		CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
+	vector2d position;
 
-		float x_, y_;
-		int health;
-		std::shared_ptr<Sprite> sprite_;
+	float x_, y_;
+	float velocityX;
+	int health;
+	bool onGround, alive, targetAquired;
 
-		struct PlayerLocation
-		{
-			float playerX, playerY;
-		};
+	State<Enemy>* currentState;
+	State<Enemy>* previousState;
+	State<Enemy>* globalState;
 
-		PlayerLocation playerLocation;
+	void updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
+	void updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
 
+	struct Point
+	{
+		int x, y;
+	};
+
+	struct CollisionResult
+	{
+		float x, y;
+		bool collided;
+	};
+
+	BoundingBox rightCollisionBox(float delta) const;
+	BoundingBox leftCollisionBox(float delta) const;
+	BoundingBox topCollisionBox(float delta) const;
+	BoundingBox bottomCollisionBox(float delta) const;
+
+	CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
+
+	struct PlayerLocation
+	{
+		float playerX, playerY;
+	};
+
+	PlayerLocation playerLocation;
 };
 
-#endif //ENEMY_H_
-
-//186, 254, 202
+#endif //TEST_ENEMY

@@ -7,6 +7,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "projectile.h"
+#include "enemy.h"
 
 #ifdef _WIN32
 #include <SDL.h>
@@ -20,6 +21,7 @@ class TileMap;
 class Player;
 class Enemy;
 class Projectile;
+class Enemy;
 
 class Game
 {
