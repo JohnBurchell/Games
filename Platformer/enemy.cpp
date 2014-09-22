@@ -9,16 +9,18 @@ namespace {
 	BoundingBox X_BOX = { 6, 10, 20, 12 };
 
 	constexpr int START_HP = 3;
+	constexpr float SPOT_DISTANCE = 200.0f;
 }
 
 class TileMap;
 
 Enemy::Enemy(Graphics& graphics, float x, float y) :
-	velocityX{ 0.0f },
 	position{ x, y },
+	velocityX{ 0.0f },
 	health{ START_HP },
 	onGround{ false },
 	alive{ true },
+	targetAquired{ false },
 	currentState{ new IdleState }
 
 {
@@ -34,61 +36,84 @@ void Enemy::draw(float cameraX, float cameraY)
 {
 	//Potential cache miss?
 	sprite_->draw(*graphics_, position.x - cameraX, position.y - cameraY);
-	graphics_->renderLine(position.x - cameraX, position.y - cameraY, playerLocation.playerX - cameraX, playerLocation.playerY - cameraY);
-}
+	if(targetAquired)
+	{
+		graphics_->renderLine(position.x - cameraX, position.y - cameraY, 
+					player.x - cameraX, player.y - cameraY);
+	}
 
-bool Enemy::isInLineOfSight(float x1, float y1, float x2, float y2)
+}	
+
+std::vector<Enemy::Point> Enemy::bresenham(float x1, float y1, float x2, float y2)
 {
-	//int deltaX = pointB.x - pointA.x;
-	//int deltaY = pointB.y - pointA.y;
-
-	bool steep = (fabs(pointB.y - pointA.y) > fabs(pointB.x - pointA.x));
+	bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 
 	if (steep)
 	{
-
+		std::swap(x1, y1);
+		std::swap(x2, y2);
 	}
 
-	if (pointA.x > pointB.x)
+	if (x1 > x2)
 	{
-
+		std::swap(x1, x2);
+		std::swap(y1, y2);
 	}
 
-	float x0, x1, y0, y1;
-	x0 = pointA.x;
-	y0 = pointA.y;
-	x1 = pointB.x;
-	y1 = pointB.y;
+	const float dx = x2 - x1;
+	const float dy = fabs(y2 - y1);
 
-	int deltaX = x1 - x0;
-	int deltaY = y1 - y0;
+	std::vector<Enemy::Point> points;
 
-	std::vector<Point> points;
+	float error = dx / 2.0f;
+	const int ystep = (y1 < y2) ? 1 : -1;
 
-	double error = 0;
-	double deltaerr = abs(deltaY / deltaX);
-	
-	int y = y0;
-	int ystep = y0 < y1 ? 1 : -1;
+	int y = static_cast<int>(y1);
 
-	std::cout << deltaX << " | " << deltaY << std::endl;
-	std::cout << pointA.x << " | " << pointB.x << std::endl;
+	const int maxX = static_cast<int>(x2);
 
-	for (int x = x0; x <= x1; ++x)
-	{
-		points.push_back({ x, y });
-		error += deltaY;
-		if (2 * error >= deltaX)
-		{
-			y += ystep;
-			error -= deltaX;
-		}
+	for(int x=(int)x1; x<maxX; x++)
+  	{
+    	if(steep)
+    	{
+			points.push_back({ y, x });
+    	}
+    	else
+    	{
+			points.push_back({ x, y });
+    	}
+ 
+    	error -= dy;
+    	if(error < 0)
+    	{
+        	y += ystep;
+        	error += dx;
+    	}
+  	}	
 
-	}
-
-	std::cout << points.size() << std::endl;
-	return false;
+	return points;
 }
+
+bool Enemy::isInLineOfSight(std::vector<Point> pixels, TileMap& map)
+{
+	bool isInLineOfSight = true;
+
+	for(auto& x : pixels)
+	{
+		if(map.mapTiles[x.y / 32][x.x / 32].type_ == TileMap::TileType::WALL)
+		{
+			isInLineOfSight = false;
+		}
+	}
+
+	return isInLineOfSight;
+}
+
+bool Enemy::isInRange(const vector2d& target)
+{
+	return fabs(position.x + 16 - target.x + 16) <= SPOT_DISTANCE;
+}
+
 
 void Enemy::changeState(State<Enemy>* newState)
 {
@@ -104,14 +129,24 @@ void Enemy::update(uint32_t time_ms, TileMap& map)
 	//TODO - If i optimise the collection of tiles, this won't be that expensive!
 	std::vector<BoundingBox> collisionTiles = map.getCollisionTiles();
 
+	if(isInRange(player))
+	{
+		auto losPixels = bresenham(position.x + 16, position.y + 16, player.x + 16, player.y + 16);
+		targetAquired = isInLineOfSight(losPixels, map);
+	}
+	else
+	{
+		targetAquired = false;
+	}
+
 	updateY(time_ms, collisionTiles);
 	updateX(time_ms, collisionTiles);
 }
 
 void Enemy::updatePlayerData(float x, float y)
 {
-	playerLocation.playerX = x;
-	playerLocation.playerY = y;
+	player.x = x;
+	player.y = y;
 }
 
 void Enemy::takeDamage(int damage)
@@ -162,13 +197,18 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	}
 }
 
+void Enemy::stop()
+{
+	velocityX = 0;
+}
+
 void Enemy::flee()
 {
-	if (playerLocation.playerX < x_)
+	if (player.x < position.x)
 	{
 		velocityX = CHASE_SPEED;
 	}
-	else
+	else if (player.x > position.x) 
 	{
 		velocityX = -CHASE_SPEED;
 	}
@@ -176,16 +216,19 @@ void Enemy::flee()
 
 void Enemy::chase()
 {
-	std::cout << position.length() << std::endl; 
-
 	//Player is to the left of the enemy
-	if (playerLocation.playerX < position.x) {
+	if (player.x < position.x) {
 		velocityX = -CHASE_SPEED;
 	}
 	//Player to the right
-	else if (playerLocation.playerX > position.x) {
+	else if (player.x > position.x) {
 		velocityX = CHASE_SPEED;
 	}
+}
+
+void Enemy::idle()
+{
+	
 }
 
 void Enemy::seek()

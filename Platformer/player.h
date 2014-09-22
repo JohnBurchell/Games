@@ -66,8 +66,8 @@ class Player : public Actor
 		std::unique_ptr<Sprite> sprite;
 
 		std::vector<BoundingBox> debugTiles;
-		bool debug;
 		float debugDelta;
+		bool debug;
 };
 
 #endif //PLAYER_H_

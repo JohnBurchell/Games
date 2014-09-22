@@ -14,13 +14,9 @@ namespace {
 
 	constexpr float GRAVITY = 0.00089f;
 	constexpr float MAX_Y_SPEED = 0.5f;
-	constexpr float JUMP_GRAVITY = 0.00025f;
+	constexpr float JUMP_GRAVITY = 0.00065f;
 
-	constexpr float Y_TARGETSPEED = 0.9f;
 	constexpr float X_TARGETSPEED = 0.24f;
-
-	//Values for invulnerability
-	constexpr float timeInvulnerable = 3.0f;
 
 	//The boxes should be a little bit bigger than the player sprite
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
@@ -34,11 +30,12 @@ Player::Player(Graphics& graphics, float x, float y) :
 	yVelocity{ 0.0f },
 	accelerationX{ 0 },
 	health{ 10 },
-	debug{ false },
 	jumping{ false },
 	invulnerable{ false },
+	invulnTime{ 300.0f },
 	debugDelta{ 0.0f },
-	invulnTime{ 300.0f }
+	debug{ false }
+
 {
 	sprite.reset(new Sprite(graphics, "resources/sprites/player.bmp", 0, 0, 32, 32));
 }
@@ -257,7 +254,7 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 
 void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 {
-	float yAcceleration = jumping && yVelocity < 0.0f ? GRAVITY : GRAVITY;
+	float yAcceleration = jumping && yVelocity < 0.0f ? GRAVITY : JUMP_GRAVITY;
 	
 	yVelocity = std::min(yVelocity + yAcceleration * time_ms, MAX_Y_SPEED);
 

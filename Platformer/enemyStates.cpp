@@ -13,20 +13,25 @@ IdleState* IdleState::instance()
 
 void IdleState::enter(Enemy* enemy)
 {
-	std::cout << "Becoming idle!" << std::endl;
+	std::cout << "I see no-one" << std::endl;
+	enemy->stop();
 }
 
 void IdleState::execute(Enemy* enemy)
 {
-	if (enemy->isAlive() && enemy->getHealth() < 3)
+	if (enemy->isTargetAquired())
 	{
 		enemy->changeState(new ChaseState);
+	}
+	else 
+	{
+		enemy->wander();
 	}
 }
 
 void IdleState::exit(Enemy* enemy)
 {
-	std::cout << "Stopping being idle!" << std::endl;
+	std::cout << "I see you!" << std::endl;
 }
 
 ChaseState* ChaseState::instance()
@@ -44,9 +49,15 @@ void ChaseState::enter(Enemy* enemy)
 void ChaseState::execute(Enemy* enemy)
 {
 	enemy->chase();
+
 	if (enemy->getHealth() == 1)
 	{
 		enemy->changeState(new FleeState);
+	}
+
+	if(!enemy->isTargetAquired())
+	{
+		enemy->changeState(new IdleState);
 	}
 }
 

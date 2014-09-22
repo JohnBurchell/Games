@@ -26,11 +26,20 @@ public:
 
 	inline const vector2d getPosition() const { return position; };
 
-	bool isInLineOfSight(const vector2d& pointA, const vector2d& pointB);
+	struct Point
+	{
+		int x, y;
+	};
 
+	inline bool isTargetAquired() { return targetAquired; };
+
+	bool isInRange(const vector2d& target);
+
+	void stop();
 	void flee();
 	void seek();
 	void chase();
+	void wander();
 
 	void updatePlayerData(float x, float y);
 	BoundingBox getDamageRectangle();
@@ -38,8 +47,9 @@ public:
 private:
 
 	vector2d position;
+	vector2d Target;
+	vector2d player;
 
-	float x_, y_;
 	float velocityX;
 	int health;
 	bool onGround, alive, targetAquired;
@@ -51,10 +61,8 @@ private:
 	void updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
 	void updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles);
 
-	struct Point
-	{
-		int x, y;
-	};
+	std::vector<Point> bresenham(float x1, float y1, float x2, float y2);
+	bool isInLineOfSight(std::vector<Point> pixels, TileMap& map);
 
 	struct CollisionResult
 	{
@@ -69,12 +77,6 @@ private:
 
 	CollisionResult getCollisionResult(const std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
 
-	struct PlayerLocation
-	{
-		float playerX, playerY;
-	};
-
-	PlayerLocation playerLocation;
 };
 
 #endif //TEST_ENEMY

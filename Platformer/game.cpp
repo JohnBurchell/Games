@@ -11,7 +11,6 @@ class Sprite;
 class Player;
 class Enemy;
 class Projectile;
-class TestEnemy;
 
 namespace
 {
@@ -61,8 +60,6 @@ void Game::run()
 
 	uint32_t previousFrameTime = SDL_GetTicks();
 
-	static auto startTime = SDL_GetTicks();
-
 	while(true) {
 
 		uint32_t frameStart = SDL_GetTicks();
@@ -97,9 +94,6 @@ void Game::run()
 				case SDLK_F12:
 					player->enableDebug();
 					break;
-				case SDLK_q:
-					enemies[0]->isInLineOfSight(player->getPosition(), enemies[0]->getPosition());
-					break;
 				case SDLK_ESCAPE:
 					exit(0);
 					break;
@@ -127,7 +121,6 @@ void Game::run()
 
 		uint32_t target_ms = 1000 / FPS;
 		const int elapsedTime = SDL_GetTicks() - frameStart;
-		const auto test = SDL_GetTicks() - startTime;
 
 		if (elapsedTime < target_ms) {
 			//Do nothing - Waste time to reach limit frame rate.

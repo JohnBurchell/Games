@@ -21,8 +21,6 @@ class Actor
 		virtual void update(const uint32_t time, TileMap& map) = 0;
 
 	private:
-		float x_, y_;
-
 		std::shared_ptr<Sprite> sprite_;
 };
 

@@ -28,6 +28,8 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 		map->mapTiles[6][col] = tile;
 	}
 
+	map->mapTiles[5][7] = tile;
+	map->mapTiles[4][7] = tile;
 	map->mapTiles[6][num_cols - 3] = Tile();
 
 	for (int col = 0; col < num_cols; ++col) {

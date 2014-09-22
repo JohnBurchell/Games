@@ -49,7 +49,6 @@ class TileMap
 		std::vector< CollisionTile > getCollisionTilesTest(const BoundingBox& box) const;
 
 
-	private:
 
 		//TO-DO
 		//Background Images - If doing Parallax then I'll need 3
@@ -70,7 +69,7 @@ class TileMap
 				void draw(Graphics& graphics);
 				std::shared_ptr<Sprite> sprite_;
 				TileType type_;
-		};
+		};	
 
 		//Container for the tiles.
 		std::vector < std::vector< Tile > > mapTiles;
