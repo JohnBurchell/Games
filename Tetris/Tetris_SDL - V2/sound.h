@@ -1,6 +1,12 @@
 #pragma once
 
+#ifdef _WIN32
 #include <SDL_mixer.h>
+#endif
+
+#ifdef __linux__
+#include <SDL2/SDL_mixer.h>
+#endif
 #include "common.h"
 
 class Sound

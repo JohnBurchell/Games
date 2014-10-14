@@ -195,16 +195,16 @@ bool Board::collision_right(Tetris_Shape& shape)
 	return false;
 }
 
-void Board::clear_line(int i)
+void Board::clear_line(int line)
 {
 
 	//Clear a line.
-	for (auto& x : board[i]){
+	for (auto& x : board[line]){
 		x = 0;
 	}
 
 	//Move all lines down one block from the point where the line was cleared.
-	for(i; i > 0; i--){
+	for(int i = line; i > 0; i--){
 		for (int j = 0; j < Constants::BOARD_COLS; j++){
 			board[i][j] = board[i - 1][j];
 		}

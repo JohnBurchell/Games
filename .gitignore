@@ -1,0 +1,9 @@
+#Executables
+*.out
+./Platformer
+./platformer
+./Tetris
+./tetris
+
+#Storage Files
+*.dat

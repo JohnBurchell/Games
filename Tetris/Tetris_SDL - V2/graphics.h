@@ -2,8 +2,15 @@
 #define GRAPHICS_H_
 #pragma once
 
-#include <SDL_ttf.h>
+#ifdef _WIN32
 #include <SDL.h>
+#include <SDL_ttf.h>
+#endif
+
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#endif
 #include <map>
 
 #include "common.h"
@@ -22,7 +29,7 @@ public:
 	void flip();
 	void clear();
 
-	SDL_Texture* Graphics::load_image(const std::string& file_name, bool black_is_transparent);
+	SDL_Texture* load_image(const std::string& file_name, bool black_is_transparent);
 
 	void render_texture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip_rect = nullptr);
 	void render_texture(SDL_Texture* texture, const SDL_Rect& destination, const SDL_Rect* clip = nullptr) const;

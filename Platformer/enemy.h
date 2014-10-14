@@ -37,7 +37,6 @@ public:
 
 	void stop();
 	void flee();
-	void seek();
 	void chase();
 	void wander();
 

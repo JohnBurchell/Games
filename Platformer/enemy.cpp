@@ -226,14 +226,9 @@ void Enemy::chase()
 	}
 }
 
-void Enemy::idle()
+void Enemy::wander()
 {
 	
-}
-
-void Enemy::seek()
-{
-
 }
 
 void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)

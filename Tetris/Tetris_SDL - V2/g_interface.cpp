@@ -142,7 +142,7 @@ std::vector<G_Interface::Player_Record> G_Interface::get_players()
 
 	file.close();
 
-	auto compare = [](Player_Record& a, Player_Record& b) { return std::stoi(a.score) > std::stoi(b.score); };
+	auto compare = [](const Player_Record& a, const Player_Record& b) { return std::stoi(a.score) > std::stoi(b.score); };
 	std::sort(names.begin(), names.end(), compare);
 
 	return names;

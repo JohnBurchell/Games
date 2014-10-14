@@ -49,7 +49,7 @@ public:
 	 G_Interface(Graphics& grpahics);
 	 G_Interface();
 
-	 void G_Interface::create_button(Graphics& graphics, std::string label, std::string id, int height, int width, int pos_x, int pos_y);
+	 void create_button(Graphics& graphics, std::string label, std::string id, int height, int width, int pos_x, int pos_y);
 
 	void setup_main_menu(Graphics& graphics);
 	void setup_pause(Graphics& graphics);
