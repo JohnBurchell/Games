@@ -11,12 +11,7 @@ type(UI_Type::PLAYING)
 
 G_Interface::G_Interface() 
 
-{
-	SDL_Rect* test_rect;
-
-	test_rect = new SDL_Rect{0,0,0,0};
-
-};
+{};
 
 void G_Interface::setup_main_menu(Graphics& graphics)
 {

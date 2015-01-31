@@ -30,8 +30,6 @@ public:
 	void draw(Graphics& graphics);
 
 	std::string id, label;
-	void test_draw(Graphics& graphics);
-
 	
 
 private:
@@ -42,7 +40,6 @@ private:
 	SDL_Rect source_rect, desination_rect;
 	Mouse_State current_state;
 	SDL_Texture* button_texture;
-
 };
 
 
