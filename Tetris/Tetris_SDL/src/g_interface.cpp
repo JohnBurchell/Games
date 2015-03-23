@@ -244,7 +244,6 @@ std::string Button::handle_event(SDL_Event* e)
 	return "no_action";
 }
 
-//Graphics ref probably needed here.
 void Button::draw(Graphics& graphics)
 {
 	graphics.render_texture(button_texture, position.x, position.y, &source_rect);
