@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <string>
 
 //Forward declarations
 class Graphics;
@@ -29,8 +30,8 @@ Game::Game()
 void Game::updateCamera(Camera& camera)
 {
 	auto position = player->getPosition();
-	camera.x = (position.x + Constants::TILE_WIDTH - Constants::SCREEN_WIDTH / 2);
-	camera.y = (position.y + Constants::TILE_HEIGHT - Constants::SCREEN_HEIGHT / 2);
+	camera.x = (position.x - Constants::SCREEN_WIDTH / 2);
+	camera.y = (position.y - Constants::SCREEN_HEIGHT / 2);
 
 	if (camera.x < 0) {
 		camera.x = 0;
@@ -51,10 +52,12 @@ void Game::run()
 	Graphics graphics;
 
 	player.reset(new Player(graphics, 4 * 32, 4 * 32));
-
 	enemies.emplace_back(new Enemy(graphics, 8 * 32, 4 * 32));
-
 	map.reset(map->generateDebugMap(graphics));
+
+	backgrounds.emplace_back(new Background{ graphics, "resources/background/palace.bmp", true });
+	backgrounds.emplace_back(new Background{ graphics, "resources/background/arches.bmp", true });
+
 
 	Camera camera { Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT };
 
@@ -85,11 +88,14 @@ void Game::run()
 					enemies.emplace_back(new Enemy(graphics, 8 * 32, 4 * 32));
 					break;
 				case SDLK_RETURN:
+					//Considering moving this to the player instead, however, this solution seems ok for now
+					//Might add something that restricts the amount of bullets being fired
+					player->shoot();
 					projectiles.emplace_back( 
 						new Projectile(graphics, 
 									   pos.x, 
 									   pos.y,
-									   player->getVelocity() >= 0 ? 0.6f : -0.6f));
+									   0.7f * player->get_facing()));
 					break;
 				case SDLK_F12:
 					player->enableDebug();
@@ -112,7 +118,6 @@ void Game::run()
 
 		uint32_t currentTime = SDL_GetTicks();
 		const int timeSpentThisFrame = currentTime - previousFrameTime;
-
 		update(std::min(timeSpentThisFrame, MAX_FRAME_TIME));
 		updateCamera(camera);
 
@@ -120,13 +125,15 @@ void Game::run()
 		draw(graphics, camera);
 
 		uint32_t target_ms = 1000 / FPS;
-		const int elapsedTime = SDL_GetTicks() - frameStart;
+		const uint32_t elapsedTime = SDL_GetTicks() - frameStart;
 
 		if (elapsedTime < target_ms) {
 			//Do nothing - Waste time to reach limit frame rate.
 			SDL_Delay(target_ms - elapsedTime);
 		}
-	}
+		graphics.update_FPS(std::to_string(elapsedTime));
+		
+	}//while
 }
 
 void Game::update(uint32_t time_ms)
@@ -158,7 +165,7 @@ void Game::update(uint32_t time_ms)
 		}
 	}
 
-	auto predicate = [=](std::unique_ptr<Projectile>& a) { return a->hasCollided(); };
+	auto predicate = [=](std::unique_ptr<Projectile>& a) { return a->has_collided(); };
 	auto predicateEnemy = [=](std::unique_ptr<Enemy>& a) { return !a->isAlive(); };
 
 	if(projectiles.size() > 0 ){
@@ -172,14 +179,17 @@ void Game::update(uint32_t time_ms)
 void Game::draw(Graphics& graphics, Camera& camera)
 {
 	graphics.clear();
+
 	map->draw(graphics, camera.x, camera.y);
 	player->draw(graphics, camera.x, camera.y);
 
-	for (auto& x : projectiles) {
+	for (auto& x : projectiles) 
+	{
 		x->draw(graphics, camera.x, camera.y);
 	}
 
-	for(auto& x : enemies) {
+	for(auto& x : enemies) 
+	{
 		x->draw(camera.x, camera.y);
 	}
 

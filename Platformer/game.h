@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "projectile.h"
 #include "enemy.h"
+#include "background.h"
 
 #ifdef _WIN32
 #include <SDL.h>
@@ -52,6 +53,7 @@ class Game
 
 		std::vector< std::unique_ptr<Projectile> > projectiles;
 		std::vector< std::unique_ptr<Enemy> > enemies;
+		std::vector< std::unique_ptr<Background> > backgrounds;
 
 };
 
