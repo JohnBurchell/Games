@@ -4,6 +4,18 @@
 ./platformer
 ./Tetris
 ./tetris
+*.exe
 
 #Storage Files
 *.dat
+
+#MSVS Files
+*.vcxproj
+Debug/
+Release/
+*.idp
+*.pbp
+*.obj
+*.Build.CppClean
+*.log
+
