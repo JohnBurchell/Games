@@ -3,13 +3,13 @@
 
 namespace {
 
-	constexpr float CHASE_SPEED = 0.15f;
+	const float CHASE_SPEED = 0.15f;
 
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
 	BoundingBox X_BOX = { 6, 10, 20, 12 };
 
-	constexpr int START_HP = 3;
-	constexpr float SPOT_DISTANCE = 200.0f;
+	const int START_HP = 3;
+	const float SPOT_DISTANCE = 200.0f;
 }
 
 class TileMap;
@@ -24,21 +24,21 @@ Enemy::Enemy(Graphics& graphics, float x, float y) :
 	currentState{ new IdleState }
 
 {
-	graphics_ = &graphics;
-	if (graphics_ == nullptr)
+	m_graphics = &graphics;
+	if (m_graphics == nullptr)
 	{
 		throw Graphics::Texture_Error();
 	}
-	sprite_.reset(new Sprite(graphics, "resources/sprites/enemy.bmp", 0, 0, 32, 32));
+	m_sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0));
 }
 
 void Enemy::draw(float cameraX, float cameraY)
 {
 	//Potential cache miss?
-	sprite_->draw(*graphics_, position.x - cameraX, position.y - cameraY);
+	m_sprite->draw(*m_graphics, position.x - cameraX, position.y - cameraY);
 	if(targetAquired)
 	{
-		graphics_->renderLine(position.x - cameraX, position.y - cameraY, 
+		m_graphics->renderLine(position.x - cameraX, position.y - cameraY, 
 					player.x - cameraX, player.y - cameraY);
 	}
 
@@ -102,7 +102,7 @@ bool Enemy::isInLineOfSight(std::vector<Point> pixels, TileMap& map)
 	{
 		if(map.mapTiles[x.y / 32][x.x / 32].type_ == TileMap::TileType::WALL)
 		{
-			isInLineOfSight = false;
+			return false;
 		}
 	}
 
@@ -125,6 +125,8 @@ void Enemy::changeState(State<Enemy>* newState)
 void Enemy::update(uint32_t time_ms, TileMap& map)
 {
 	currentState->execute(this);
+
+	m_sprite->update_sprite();
 
 	//TODO - If i optimise the collection of tiles, this won't be that expensive!
 	std::vector<BoundingBox> collisionTiles = map.getCollisionTiles();
@@ -200,17 +202,24 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 void Enemy::stop()
 {
 	velocityX = 0;
+	m_sprite->set_pose(Animated_Sprite::sprite_poses::IDLE);
 }
 
 void Enemy::flee()
 {
+	//Flee to the right
 	if (player.x < position.x)
 	{
 		velocityX = CHASE_SPEED;
+		m_sprite->set_facing(Animated_Sprite::sprite_facings::FACING_RIGHT);
+		m_sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_RIGHT);
 	}
+	//Flee to the left
 	else if (player.x > position.x) 
 	{
 		velocityX = -CHASE_SPEED;
+		m_sprite->set_facing(Animated_Sprite::sprite_facings::FACING_LEFT);
+		m_sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_LEFT);
 	}
 }
 
@@ -219,16 +228,19 @@ void Enemy::chase()
 	//Player is to the left of the enemy
 	if (player.x < position.x) {
 		velocityX = -CHASE_SPEED;
+
 	}
 	//Player to the right
 	else if (player.x > position.x) {
 		velocityX = CHASE_SPEED;
+		m_sprite->set_facing(Animated_Sprite::sprite_facings::FACING_RIGHT);
+		m_sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_RIGHT);
 	}
 }
 
-void Enemy::wander()
+void Enemy::seek()
 {
-	
+
 }
 
 void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)

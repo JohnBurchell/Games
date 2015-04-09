@@ -10,21 +10,20 @@ class Graphics;
 class Sprite 
 {
 	public:
-		Sprite(Graphics& graphics, std::string fileName, int x, int y, int height, int width);
-		~Sprite();
+		explicit Sprite(Graphics& graphics, std::string fileName, int x, int y, int height, int width);
 
 		void draw(Graphics& graphics, float x, float y);
 		void update(const int delta);
 
 	private:
-		SDL_Texture* texture_;
-		SDL_Rect destinationRectangle;
+		SDL_Texture* m_texture;
+		SDL_Rect m_destination_rectangle;
 
-		int x_, y_;
-		int width_, height_;
+		int m_x, m_y;
+		int m_width, m_height;
 
 	protected:
-		SDL_Rect sourceRectangle;
+		SDL_Rect m_source_rectangle;
 };
 
 #endif //SPRITE_H_

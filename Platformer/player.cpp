@@ -10,13 +10,11 @@ using std::vector;
 
 namespace {
 
-	constexpr float INITIAL_JUMP_VELOCITY = 0.35f;
-
-	constexpr float GRAVITY = 0.00089f;
-	constexpr float MAX_Y_SPEED = 0.5f;
-	constexpr float JUMP_GRAVITY = 0.00065f;
-
-	constexpr float X_TARGETSPEED = 0.24f;
+	const float INITIAL_JUMP_VELOCITY = 0.35f;
+	const float GRAVITY = 0.00089f;
+	const float MAX_Y_SPEED = 0.5f;
+	const float JUMP_GRAVITY = 0.00065f;
+	const float X_TARGETSPEED = 0.24f;
 
 	//The boxes should be a little bit bigger than the player sprite
 	BoundingBox Y_BOX = { 10, 2, 12, 30 };
@@ -37,7 +35,7 @@ Player::Player(Graphics& graphics, float x, float y) :
 	debug{ false }
 
 {
-	sprite.reset(new Sprite(graphics, "resources/sprites/player.bmp", 0, 0, 32, 32));
+	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0));
 }
 
 void Player::draw(Graphics& graphics, float cameraX, float cameraY)
@@ -87,23 +85,44 @@ void Player::startJump()
 void Player::shoot()
 {
 	//Animation, sound?
+	//Return where the bullet should spawn and in what direction it is travelling with the velocity
+	/*
+		Return -1 for shooting to the left
+		Return 1 for shooting to the right
+		Return the position of the "gun barrel", at the moment this will be 16 up from the bottom of the sprite
+		Return the velocity of the shot 
+	*/
 	std::cout << "Fire!" << std::endl;
+
+	if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_LEFT)
+	{
+		//Negative velocity if not already
+	}
+	else if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_RIGHT)
+	{
+		//Positive velocity if not already
+	}
 }
 
 void Player::startMovingRight()
 {
 	accelerationX = 1;
+	sprite->set_facing(Animated_Sprite::sprite_facings::FACING_RIGHT);
+	sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_RIGHT);
 }
 
 void Player::startMovingLeft()
 {
 	accelerationX = -1;
+	sprite->set_facing(Animated_Sprite::sprite_facings::FACING_LEFT);
+	sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_LEFT);
 }
 
 void Player::stopMoving()
 {
 	accelerationX = 0;
 	xVelocity = 0;
+	sprite->set_pose(Animated_Sprite::sprite_poses::IDLE);
 }
 
 void Player::update(uint32_t time_ms, TileMap& map)
@@ -118,7 +137,7 @@ void Player::update(uint32_t time_ms, TileMap& map)
 
 	updateY(time_ms, collisionTiles);
 	updateX(time_ms, collisionTiles);
-
+	sprite->update_sprite();
 
 	if(invulnerable && invulnTime > 0.0f)
 	{

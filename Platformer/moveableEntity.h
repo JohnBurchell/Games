@@ -3,11 +3,9 @@
 
 #include "baseGameEntity.h"
 #include "graphics.h"
-#include "sprite.h"
+#include "animated_sprite.h"
 #include "common.h"
 
-class Graphics;
-class Sprite;
 
 class MoveableEntity : public BaseGameEntity
 {
@@ -17,8 +15,8 @@ public:
 
 protected:
 
-	Graphics* graphics_;
-	std::unique_ptr<Sprite> sprite_;
+	Graphics* m_graphics;
+	std::unique_ptr<Animated_Sprite> m_sprite;
 };
 
 #endif //MOVEABLE_ENTITY_H_

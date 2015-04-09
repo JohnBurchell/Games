@@ -15,7 +15,7 @@ public:
 	~Enemy();
 
 	void update(uint32_t time_ms, TileMap& map) override;
-	void draw(float cameraX, float cameraY) override;
+	void draw(const float cameraX, const float cameraY) override;
 
 	void changeState(State<Enemy>* test);
 	void revertToPreviousState();
@@ -37,6 +37,7 @@ public:
 
 	void stop();
 	void flee();
+	void seek();
 	void chase();
 	void wander();
 

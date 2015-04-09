@@ -5,6 +5,7 @@
 #include "common.h"
 #include "boundingBox.h"
 #include "actor.h"
+#include "animated_sprite.h"
 
 class Grpahics;
 class TileMap;
@@ -16,7 +17,7 @@ class Player : public Actor
 		Player(Graphics& graphics, float x, float y);
 		~Player() override;
 
-		void draw(Graphics& graphics, float cameraX, float cameraY) override;
+		void draw(Graphics& graphics, const float cameraX, const float cameraY) override;
 		void update(const uint32_t delta, TileMap& map) override;
 
 		BoundingBox getDamageRectangle();
@@ -25,6 +26,7 @@ class Player : public Actor
 
 		//Remove - Replace with sprite facing when animation is implemented?
 		inline float getVelocity() { return xVelocity; };
+		inline float get_facing() { return sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_LEFT ? -1.0f : 1.0f; };
 
 		void takeDamage();
 		void startJump();
@@ -63,7 +65,7 @@ class Player : public Actor
 		CollisionResult getCollisionResult(std::vector<BoundingBox>& collidingTiles, const BoundingBox& box);
 
 		//This will have to be animated later!
-		std::unique_ptr<Sprite> sprite;
+		std::unique_ptr<Animated_Sprite> sprite;
 
 		std::vector<BoundingBox> debugTiles;
 		float debugDelta;
