@@ -10,8 +10,10 @@ class Graphics;
 class Background
 {	
 	public:
-		Background(Graphics& graphics);
+		Background(Graphics& graphics, std::string filename, bool transparency);
 		~Background();
+
+		void draw(Graphics& graphics, float x, float y);
 
 	private:
 		SDL_Texture* texture;
