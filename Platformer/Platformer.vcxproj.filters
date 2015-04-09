@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Sprites">
+      <UniqueIdentifier>{0ed8f12e-05fe-48cd-bdaf-38f8d051a4f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="actor.cpp">
@@ -39,9 +42,6 @@
     <ClCompile Include="run.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,7 +52,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="animated_sprite.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Sprites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +86,6 @@
     <ClInclude Include="projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="tileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -101,14 +101,17 @@
     <ClInclude Include="vector2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="animated_sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="moveableEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="baseGameEntity.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="animated_sprite.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Sprites</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

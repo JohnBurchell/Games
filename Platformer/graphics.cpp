@@ -4,7 +4,7 @@
 Graphics::Graphics() :
 
 	window{ SDL_CreateWindow("Platformer - 0.1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-							 Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, SDL_WINDOW_SHOWN) },
+							 Constants::SCREEN_WIDTH_PIX, Constants::SCREEN_HEIGHT_PIX, SDL_WINDOW_SHOWN) },
 	renderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED) }
 
 {
@@ -23,22 +23,26 @@ Graphics::Graphics() :
 
 SDL_Texture* Graphics::loadImage(const std::string& fileName, bool black_is_transparent)
 {
-	if (loadedImages.count(fileName) == 0)	{
+	if (loadedImages.count(fileName) == 0)	
+	{
 		SDL_Texture* texture;
 		SDL_Surface* surface = SDL_LoadBMP(fileName.c_str());
 
-		if (black_is_transparent) {
+		if (black_is_transparent) 
+		{
 			//0 = black, this ignores black around the image
 			SDL_SetColorKey(surface, SDL_TRUE, 0);
 		}
 
-		if (surface == nullptr) {
+		if (surface == nullptr) 
+		{
 			auto error = "Error creating surface for " + fileName + "!" + SDL_GetError();
 			throw Surface_Error();
 		}
 		texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-		if (texture == nullptr) {
+		if (texture == nullptr) 
+		{
 			auto error = "Cannot load texture " + fileName + "!" + SDL_GetError();
 			throw Texture_Error();
 		}
@@ -53,14 +57,16 @@ SDL_Texture* Graphics::loadImage(const std::string& fileName, bool black_is_tran
 void Graphics::renderTexture(SDL_Texture* texture, const float x, const float y, const SDL_Rect* clip) const
 {
 	SDL_Rect destRectangle;
-	destRectangle.x = x;
-	destRectangle.y = y;
+	destRectangle.x = static_cast<int>(x);
+	destRectangle.y = static_cast<int>(y);
 
-	if (clip != nullptr) {
+	if (clip != nullptr) 
+	{
 		destRectangle.w = clip->w;
 		destRectangle.h = clip->h;
 	}
-	else {
+	else 
+	{
 		SDL_QueryTexture(texture, nullptr, nullptr, &destRectangle.w, &destRectangle.h);
 	}
 
@@ -98,14 +104,14 @@ Graphics::~Graphics()
 void Graphics::renderLine(float originX, float originY, float targetX, float targetY)
 {
 	SDL_SetRenderDrawColor(renderer, 200, 200, 110, 32);
-
-	SDL_RenderDrawLine(renderer, originX + 16, originY + 16, targetX + 16, targetY + 16);
+	SDL_RenderDrawLine(renderer, static_cast<int>(originX + 16.0f), static_cast<int>(originY + 16.0f), static_cast<int>(targetX + 16.0f), static_cast<int>(targetY + 16.0f));
 }
 //Remove later
 void Graphics::render_rectanlge(const float pos_x, const float pos_y, const int colour, int width, int height)
 {
 	SDL_Color col;
-	switch (colour) {
+	switch (colour) 
+	{
 	case 1:
 		//Red
 		col = { 255, 0, 0, 255 };
@@ -141,7 +147,7 @@ void Graphics::render_rectanlge(const float pos_x, const float pos_y, const int 
 		col = { 255, 255, 255, 255 };
 		break;
 	}
-	SDL_Rect rect = { pos_x, pos_y, width, height };
+	SDL_Rect rect = { static_cast<int>(pos_x), static_cast<int>(pos_y), width, height };
 	SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
 	SDL_RenderFillRect(renderer, &rect);
 }

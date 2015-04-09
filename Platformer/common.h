@@ -11,6 +11,9 @@ namespace Constants
 	const float SCREEN_HEIGHT = 640;
 	const float SCREEN_WIDTH = 800;
 
+	const int SCREEN_HEIGHT_PIX = 640;
+	const int SCREEN_WIDTH_PIX = 800;
+
 	const float LEVEL_WIDTH = 1600;
 	const float LEVEL_HEIGHT = 1280;
 

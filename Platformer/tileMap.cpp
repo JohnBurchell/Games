@@ -30,7 +30,9 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 
 	map->mapTiles[5][7] = tile;
 	map->mapTiles[4][7] = tile;
+
 	map->mapTiles[6][num_cols - 3] = Tile();
+	map->mapTiles[6][num_cols - 4] = Tile();
 
 	for (int col = 0; col < num_cols; ++col) {
 		map->mapTiles[12][col] = tile;
@@ -63,23 +65,6 @@ TileMap* TileMap::generateDebugMap(Graphics& graphics)
 	}
 
 	map->mapTiles[21][3] = Tile();
-
-	map->mapTiles[14][7] = tile;
-	map->mapTiles[13][7] = tile;
-	map->mapTiles[12][6] = tile;
-
-	map->mapTiles[14][9] = tile;
-	map->mapTiles[13][9] = tile;
-
-	map->mapTiles[13][10] = tile;
-	map->mapTiles[15][10] = tile;
-
-	map->mapTiles[12][15] = tile;
-	map->mapTiles[14][14] = tile;
-	map->mapTiles[13][15] = tile;
-	map->mapTiles[12][14] = tile;
-	map->mapTiles[12][13] = tile;
-
 
 	return map;
 }

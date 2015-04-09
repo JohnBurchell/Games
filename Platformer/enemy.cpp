@@ -29,7 +29,7 @@ Enemy::Enemy(Graphics& graphics, float x, float y) :
 	{
 		throw Graphics::Texture_Error();
 	}
-	m_sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0));
+	m_sprite.reset(new Animated_Sprite(graphics, "resources/sprites/enemy_sheet.bmp", 0, 0));
 }
 
 void Enemy::draw(float cameraX, float cameraY)
@@ -113,7 +113,6 @@ bool Enemy::isInRange(const vector2d& target)
 {
 	return fabs(position.x + 16 - target.x + 16) <= SPOT_DISTANCE;
 }
-
 
 void Enemy::changeState(State<Enemy>* newState)
 {

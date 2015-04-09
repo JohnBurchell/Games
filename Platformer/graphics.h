@@ -18,7 +18,6 @@ class Graphics
 		Graphics();
 		~Graphics();
 
-
 		SDL_Texture* loadImage(const std::string& fileName, bool blackIsTransparent);
 
 		void renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect* clip = nullptr) const;

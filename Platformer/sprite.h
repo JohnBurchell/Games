@@ -10,7 +10,7 @@ class Graphics;
 class Sprite 
 {
 	public:
-		explicit Sprite(Graphics& graphics, std::string fileName, int x, int y, int height, int width);
+		explicit Sprite(Graphics& graphics, std::string fileName, float x, float y, int height, int width);
 
 		void draw(Graphics& graphics, float x, float y);
 		void update(const int delta);
@@ -19,7 +19,7 @@ class Sprite
 		SDL_Texture* m_texture;
 		SDL_Rect m_destination_rectangle;
 
-		int m_x, m_y;
+		float m_x, m_y;
 		int m_width, m_height;
 
 	protected:

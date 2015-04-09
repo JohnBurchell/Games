@@ -6,7 +6,6 @@ Animated_Sprite::Animated_Sprite(Graphics& graphics, std::string fileName, const
 	m_current_frame{0},
 	m_current_sprite_pose{ starting_pose },
 	m_current_facing{ starting_facing }
-
 {
 	const int height = 32, width = 32;
 	//Setup clipping rectangle boundaries

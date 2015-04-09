@@ -35,38 +35,38 @@ Player::Player(Graphics& graphics, float x, float y) :
 	debug{ false }
 
 {
-	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0, Animated_Sprite::sprite_facings::FACING_RIGHT));
+	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/muhreens.bmp", 0, 0, Animated_Sprite::sprite_facings::FACING_RIGHT));
 }
 
 void Player::draw(Graphics& graphics, float cameraX, float cameraY)
 {
 	sprite->draw(graphics, position.x - cameraX, position.y - cameraY);
 
-	//if (debug) {
-	//	for (auto& x : debugTiles) {
-	//		x.draw(graphics, cameraX, cameraY);
-	//	}
+	if (debug) {
+		for (auto& x : debugTiles) {
+			x.draw(graphics, cameraX, cameraY);
+		}
 
-	//	//if (debugDelta <= 0.0f) {
-	//	//	BoundingBox left = leftCollisionBox(debugDelta);
-	//	//	left.draw(graphics, cameraX, cameraY, 2);
-	//	//	BoundingBox top = topCollisionBox(debugDelta);
-	//	//	top.draw(graphics, cameraX, cameraY, 5);
-	//	//}
-	//	//else if (debugDelta >= 0.0f) {
-	//	//	BoundingBox right = rightCollisionBox(debugDelta);
-	//	//	right.draw(graphics, cameraX, cameraY, 6);
-	//	//	BoundingBox bottom = bottomCollisionBox(debugDelta);
-	//	//	bottom.draw(graphics, cameraX, cameraY, 4);
-	//	//}
+		//if (debugDelta <= 0.0f) {
+		//	BoundingBox left = leftCollisionBox(debugDelta);
+		//	left.draw(graphics, cameraX, cameraY, 2);
+		//	BoundingBox top = topCollisionBox(debugDelta);
+		//	top.draw(graphics, cameraX, cameraY, 5);
+		//}
+		//else if (debugDelta >= 0.0f) {
+		//	BoundingBox right = rightCollisionBox(debugDelta);
+		//	right.draw(graphics, cameraX, cameraY, 6);
+		//	BoundingBox bottom = bottomCollisionBox(debugDelta);
+		//	bottom.draw(graphics, cameraX, cameraY, 4);
+		//}
 
-	//	BoundingBox y = { position.x + Y_BOX.left(), position.y + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
-	//	BoundingBox x = { position.x + X_BOX.left(), position.y + X_BOX.top(), X_BOX.width(), X_BOX.height() };
-	//	y.draw(graphics, cameraX, cameraY, 2);
-	//	x.draw(graphics, cameraX, cameraY, 2);
-	//	//Damage rectangle below.
-	//	//getDamageRectangle().draw(graphics, cameraX, cameraY, 5);
-	//}
+		BoundingBox y = { position.x + Y_BOX.left(), position.y + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
+		BoundingBox x = { position.x + X_BOX.left(), position.y + X_BOX.top(), X_BOX.width(), X_BOX.height() };
+		y.draw(graphics, cameraX, cameraY, 2);
+		x.draw(graphics, cameraX, cameraY, 2);
+		//Damage rectangle below.
+		//getDamageRectangle().draw(graphics, cameraX, cameraY, 5);
+	}
 }
 
 void Player::enableDebug()
@@ -76,7 +76,8 @@ void Player::enableDebug()
 
 void Player::startJump()
 {
-	if (onGround && !jumping) {
+	if (onGround && !jumping) 
+	{
 		yVelocity = -INITIAL_JUMP_VELOCITY;
 		jumping = true;
 	}
@@ -112,7 +113,8 @@ void Player::update(uint32_t time_ms, TileMap& map)
 {
 	std::vector<BoundingBox> collisionTiles = map.getCollisionTiles();
 
-	if (debug) {
+	if (debug) 
+	{
 		//debugTiles = map.getCollisionTilesTest(bottomCollisionBox(10));
 		//No copy constructor exists for collision tiles yet - TODO?
 		debugTiles = map.getCollisionTiles();
@@ -134,46 +136,56 @@ void Player::update(uint32_t time_ms, TileMap& map)
 
 BoundingBox Player::leftCollisionBox(float delta) const
 {
-	return BoundingBox{ 
+	return BoundingBox
+	{ 
 		position.x + X_BOX.left() + delta,
 		position.y + X_BOX.top(),
 		X_BOX.width() / 2 - delta, 
-		X_BOX.height() };
+		X_BOX.height() 
+	};
 }
 
 BoundingBox Player::rightCollisionBox(float delta) const
 {
-	return BoundingBox{ 
+	return BoundingBox
+	{ 
 		position.x + +X_BOX.left() + X_BOX.width() / 2,
 		position.y + X_BOX.top(),
 		X_BOX.width() / 2 + delta, 
-		X_BOX.height()};
+		X_BOX.height()
+	};
 }
 
 BoundingBox Player::topCollisionBox(float delta) const
 {
-	return BoundingBox{ 
+	return BoundingBox
+	{ 
 		position.x + Y_BOX.left(),
 		position.y + Y_BOX.top() + delta,
 		Y_BOX.width(), 
-		Y_BOX.height() / 2 - delta};
+		Y_BOX.height() / 2 - delta
+	};
 }
 
 BoundingBox Player::bottomCollisionBox(float delta) const
 {
-	return BoundingBox{ 
+	return BoundingBox
+	{ 
 		position.x + Y_BOX.left(),
 		position.y + Y_BOX.top() + Y_BOX.height() / 2,
 		Y_BOX.width(),
-		Y_BOX.height() / 2 + delta};
+		Y_BOX.height() / 2 + delta
+	};
 }
 
 Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& collisionTiles, const BoundingBox& box)
 {
 	CollisionResult result{ 0, 0, false };
 
-	for (auto& x : collisionTiles) {
-		if (box.boxCollision(x)) {
+	for (auto& x : collisionTiles) 
+	{
+		if (box.boxCollision(x)) 
+		{
 			result.collided = true;
 			result.x = x.left();
 			result.y = x.top();
@@ -185,7 +197,7 @@ Player::CollisionResult Player::getCollisionResult(std::vector<BoundingBox>& col
 
 BoundingBox Player::getDamageRectangle()
 {
-	return{ position.x + X_BOX.left(), position.y + Y_BOX.top(), X_BOX.width(), Y_BOX.height() };
+	return { position.x + X_BOX.left(), position.y + Y_BOX.top(), X_BOX.width(), Y_BOX.height() };
 }
 
 void Player::takeDamage()
@@ -229,26 +241,32 @@ void Player::updateX(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	debugDelta = delta;
 
 	//Going to the right
-	if (delta > 0.0f) {
+	if (delta > 0.0f) 
+	{
 		auto result = getCollisionResult(collisionTiles, rightCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			xVelocity = 0.0f;
 			position.x = result.x - X_BOX.right();
 		}
-		else {
+		else 
+		{
 			position.x += delta;
 		}
 	}
 	//Going left
-	else {
+	else 
+	{
 		auto result = getCollisionResult(collisionTiles, leftCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			xVelocity = 0.0f;
 			position.x = result.x + X_BOX.right();
 		}
-		else {
+		else 
+		{
 			position.x += delta;
 		}
 	}
@@ -265,30 +283,34 @@ void Player::updateY(uint32_t time_ms, std::vector<BoundingBox>& collisionTiles)
 	debugDelta = delta;
 
 	//Going down
-	if (delta > 0.0f) {
+	if (delta > 0.0f) 
+	{
 		auto result = getCollisionResult(collisionTiles, bottomCollisionBox(delta));
-
-		if (result.collided) {
+		if (result.collided) 
+		{
 			position.y = result.y - Y_BOX.bottom();
 			yVelocity = 0.0f;
 			onGround = true;
 			jumping = false;
 		}
-		else {
+		else 
+		{
 			position.y += delta;
 			onGround = false;
 		}
 	}
 	//Going up
-	else {
+	else 
+	{
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
-
-		if (result.collided) {
+		if (result.collided) 
+		{
 			position.y = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 			onGround = true;
 		}
-		else {
+		else 
+		{
 			position.y += delta;
 			onGround = false;
 		}
