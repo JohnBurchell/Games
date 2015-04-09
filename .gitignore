@@ -11,5 +11,11 @@
 
 #MSVS Files
 *.vcxproj
-*./Debug
-*./Release
+Debug/
+Release/
+*.idp
+*.pbp
+*.obj
+*.Build.CppClean
+*.log
+
