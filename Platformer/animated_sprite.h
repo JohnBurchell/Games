@@ -28,9 +28,17 @@ public:
 	using sprite_facing = Animated_Sprite::sprite_facings;
 	using sprite_pose = Animated_Sprite::sprite_poses;
 
+	/*
+	Creates an animated sprite
+	Requires a reference to the graphics object
+	Requires a filename of the sprite sheet associated with the animted sprite
+	Float x and y for position
+	Starts in an idle pose (i.e. position 0 in the sprite sheet)
+	Starts facing left (i.e. position 0 in the y in the sprite sheet)
+	*/
 	explicit Animated_Sprite(Graphics& graphics, std::string filename, const float x, const float y, 
-		sprite_pose starting_sprite = Animated_Sprite::sprite_poses::IDLE,
-		sprite_facing starting_facing = Animated_Sprite::sprite_facings::FACING_LEFT);
+		sprite_facing starting_facing = Animated_Sprite::sprite_facings::FACING_LEFT,
+		sprite_pose starting_sprite = Animated_Sprite::sprite_poses::IDLE);
 
 	void update_sprite();
 	void set_facing(sprite_facings facing);

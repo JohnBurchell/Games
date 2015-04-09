@@ -154,7 +154,8 @@ void Enemy::updatePlayerData(float x, float y)
 void Enemy::takeDamage(int damage)
 {
 	health -= damage;
-	if (health <= 0) {
+	if (health <= 0) 
+	{
 		alive = false;
 	}
 }
@@ -164,35 +165,42 @@ void Enemy::updateY(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	//TODO - Improve, add collision for the enemy
 	float yVelocity = 0.0f;
 
-	if (!onGround) {
+	if (!onGround) 
+	{
 		yVelocity = 0.55f;
 	}
 
 	float delta = yVelocity * time_ms;
 
 	//Going down
-	if (delta > 0.0f) {
+	if (delta > 0.0f) 
+	{
 		auto result = getCollisionResult(collisionTiles, bottomCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			position.y = result.y - Y_BOX.bottom();
 			yVelocity = 0.0f;
 			onGround = true;
 		}
-		else {
+		else 
+		{
 			position.y += delta;
 			onGround = false;
 		}
 	}
 	//Going up
-	else {
+	else 
+	{
 		auto result = getCollisionResult(collisionTiles, topCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			position.y = result.y + Y_BOX.height();
 			yVelocity = 0.0f;
 		}
-		else {
+		else 
+		{
 			position.y += delta;
 			onGround = false;
 		}
@@ -226,12 +234,15 @@ void Enemy::flee()
 void Enemy::chase()
 {
 	//Player is to the left of the enemy
-	if (player.x < position.x) {
+	if (player.x < position.x) 
+	{
 		velocityX = -CHASE_SPEED;
-
+		m_sprite->set_facing(Animated_Sprite::sprite_facings::FACING_LEFT);
+		m_sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_LEFT);
 	}
 	//Player to the right
-	else if (player.x > position.x) {
+	else if (player.x > position.x) 
+	{
 		velocityX = CHASE_SPEED;
 		m_sprite->set_facing(Animated_Sprite::sprite_facings::FACING_RIGHT);
 		m_sprite->set_pose(Animated_Sprite::sprite_poses::MOVING_RIGHT);
@@ -248,14 +259,17 @@ void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	float delta = velocityX * time_ms;
 
 	//Going to the right
-	if (delta > 0.0f) {
+	if (delta > 0.0f) 
+	{
 		auto result = getCollisionResult(collisionTiles, rightCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			velocityX = 0.0f;
 			position.x = result.x - X_BOX.right();
 		}
-		else {
+		else 
+		{
 			position.x += delta;
 		}
 	}
@@ -263,11 +277,13 @@ void Enemy::updateX(const uint32_t time_ms, std::vector<BoundingBox>& collisionT
 	else {
 		auto result = getCollisionResult(collisionTiles, leftCollisionBox(delta));
 
-		if (result.collided) {
+		if (result.collided) 
+		{
 			velocityX = 0.0f;
 			position.x = result.x + X_BOX.right();
 		}
-		else {
+		else 
+		{
 			position.x += delta;
 		}
 	}
@@ -313,8 +329,10 @@ Enemy::CollisionResult Enemy::getCollisionResult(const std::vector<BoundingBox>&
 {
 	CollisionResult result{ 0, 0, false };
 
-	for (auto& x : collisionTiles) {
-		if (box.boxCollision(x)) {
+	for (auto& x : collisionTiles) 
+	{
+		if (box.boxCollision(x)) 
+		{
 			result.collided = true;
 			result.x = x.left();
 			result.y = x.top();

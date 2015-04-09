@@ -11,8 +11,6 @@
 
 #MSVS Files
 *.vcxproj
-Debug/
-Release/
 *.idp
 *.pbp
 *.obj

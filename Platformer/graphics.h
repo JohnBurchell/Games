@@ -22,7 +22,7 @@ class Graphics
 		SDL_Texture* loadImage(const std::string& fileName, bool blackIsTransparent);
 
 		void renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect* clip = nullptr) const;
-		void renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip = nullptr) const;
+		void renderTexture(SDL_Texture* texture, const float x, const float y, const SDL_Rect* clip = nullptr) const;
 		void update_FPS(const std::string fps);
 		
 		//REMOVE LATER - Debugging

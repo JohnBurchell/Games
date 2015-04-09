@@ -43,10 +43,10 @@ class BoundingBox
 		}
 
 		//TODO - Remove me, i am for debugging only.
-		void draw(Graphics& graphics, float cameraX, float cameraY, int col = 3) const { graphics.render_rectanlge(static_cast<int>(x_ - cameraX), static_cast<int>(y_ - cameraY), col, static_cast<int>(width_), static_cast<int>(height_)); };
+		//void draw(Graphics& graphics, float cameraX, float cameraY, int col = 3) const { graphics.render_rectanlge(x_ - cameraX, y_ - cameraY, col, width_, height_); };
 
 	private:
-		const float x_, y_, width_, height_;
+		float x_, y_, width_, height_;
 };
 
 #endif //BOUNDINGBOX_H_

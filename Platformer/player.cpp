@@ -35,38 +35,38 @@ Player::Player(Graphics& graphics, float x, float y) :
 	debug{ false }
 
 {
-	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0));
+	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0, Animated_Sprite::sprite_facings::FACING_RIGHT));
 }
 
 void Player::draw(Graphics& graphics, float cameraX, float cameraY)
 {
 	sprite->draw(graphics, position.x - cameraX, position.y - cameraY);
 
-	if (debug) {
-		for (auto& x : debugTiles) {
-			x.draw(graphics, cameraX, cameraY);
-		}
+	//if (debug) {
+	//	for (auto& x : debugTiles) {
+	//		x.draw(graphics, cameraX, cameraY);
+	//	}
 
-		//if (debugDelta <= 0.0f) {
-		//	BoundingBox left = leftCollisionBox(debugDelta);
-		//	left.draw(graphics, cameraX, cameraY, 2);
-		//	BoundingBox top = topCollisionBox(debugDelta);
-		//	top.draw(graphics, cameraX, cameraY, 5);
-		//}
-		//else if (debugDelta >= 0.0f) {
-		//	BoundingBox right = rightCollisionBox(debugDelta);
-		//	right.draw(graphics, cameraX, cameraY, 6);
-		//	BoundingBox bottom = bottomCollisionBox(debugDelta);
-		//	bottom.draw(graphics, cameraX, cameraY, 4);
-		//}
+	//	//if (debugDelta <= 0.0f) {
+	//	//	BoundingBox left = leftCollisionBox(debugDelta);
+	//	//	left.draw(graphics, cameraX, cameraY, 2);
+	//	//	BoundingBox top = topCollisionBox(debugDelta);
+	//	//	top.draw(graphics, cameraX, cameraY, 5);
+	//	//}
+	//	//else if (debugDelta >= 0.0f) {
+	//	//	BoundingBox right = rightCollisionBox(debugDelta);
+	//	//	right.draw(graphics, cameraX, cameraY, 6);
+	//	//	BoundingBox bottom = bottomCollisionBox(debugDelta);
+	//	//	bottom.draw(graphics, cameraX, cameraY, 4);
+	//	//}
 
-		BoundingBox y = { position.x + Y_BOX.left(), position.y + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
-		BoundingBox x = { position.x + X_BOX.left(), position.y + X_BOX.top(), X_BOX.width(), X_BOX.height() };
-		y.draw(graphics, cameraX, cameraY, 2);
-		x.draw(graphics, cameraX, cameraY, 2);
-		//Damage rectangle below.
-		//getDamageRectangle().draw(graphics, cameraX, cameraY, 5);
-	}
+	//	BoundingBox y = { position.x + Y_BOX.left(), position.y + Y_BOX.top(), Y_BOX.width(), Y_BOX.height() };
+	//	BoundingBox x = { position.x + X_BOX.left(), position.y + X_BOX.top(), X_BOX.width(), X_BOX.height() };
+	//	y.draw(graphics, cameraX, cameraY, 2);
+	//	x.draw(graphics, cameraX, cameraY, 2);
+	//	//Damage rectangle below.
+	//	//getDamageRectangle().draw(graphics, cameraX, cameraY, 5);
+	//}
 }
 
 void Player::enableDebug()
@@ -85,23 +85,6 @@ void Player::startJump()
 void Player::shoot()
 {
 	//Animation, sound?
-	//Return where the bullet should spawn and in what direction it is travelling with the velocity
-	/*
-		Return -1 for shooting to the left
-		Return 1 for shooting to the right
-		Return the position of the "gun barrel", at the moment this will be 16 up from the bottom of the sprite
-		Return the velocity of the shot 
-	*/
-	std::cout << "Fire!" << std::endl;
-
-	if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_LEFT)
-	{
-		//Negative velocity if not already
-	}
-	else if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_RIGHT)
-	{
-		//Positive velocity if not already
-	}
 }
 
 void Player::startMovingRight()

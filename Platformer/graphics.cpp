@@ -50,7 +50,7 @@ SDL_Texture* Graphics::loadImage(const std::string& fileName, bool black_is_tran
 	return loadedImages[fileName];
 }
 
-void Graphics::renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip) const
+void Graphics::renderTexture(SDL_Texture* texture, const float x, const float y, const SDL_Rect* clip) const
 {
 	SDL_Rect destRectangle;
 	destRectangle.x = x;

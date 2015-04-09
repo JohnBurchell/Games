@@ -3,13 +3,9 @@
 
 #include "common.h"
 #include "graphics.h"
-#include "sprite.h"
+#include "animated_sprite.h"
 #include "boundingBox.h"
 #include "tileMap.h"
-
-class Graphics;
-class Sprite;
-class TileMap;
 
 class Projectile
 {
@@ -30,16 +26,18 @@ class Projectile
 	private:
 		float m_x, m_y, m_velocity;
 		bool m_collided;
+		SDL_Rect clipping_rectangles[1];
 
+		BoundingBox test;
 		struct CollisionResult
 		{
-			float x, y;
+			int x, y;
 			bool collided;
 		};
 
 		CollisionResult getCollisionResult(std::vector<TileMap::CollisionTile>& collisionTiles, const BoundingBox& box);
 
-		std::shared_ptr<Sprite> sprite_;
+		std::shared_ptr<Animated_Sprite> m_sprite;
 };
 
 #endif //PROJECTILE_H_
