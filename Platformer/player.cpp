@@ -35,7 +35,7 @@ Player::Player(Graphics& graphics, float x, float y) :
 	debug{ false }
 
 {
-	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/MyChar.bmp", 0, 0));
+	sprite.reset(new Animated_Sprite(graphics, "resources/sprites/test_marine.bmp", 0, 0, Animated_Sprite::sprite_facings::FACING_RIGHT));
 }
 
 void Player::draw(Graphics& graphics, float cameraX, float cameraY)
@@ -93,15 +93,6 @@ void Player::shoot()
 		Return the velocity of the shot 
 	*/
 	std::cout << "Fire!" << std::endl;
-
-	if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_LEFT)
-	{
-		//Negative velocity if not already
-	}
-	else if (sprite->get_facing() == Animated_Sprite::sprite_facings::FACING_RIGHT)
-	{
-		//Positive velocity if not already
-	}
 }
 
 void Player::startMovingRight()

@@ -8,11 +8,11 @@
 	Starts in an idle pose (i.e. position 0 in the sprite sheet)
 	Starts facing left (i.e. position 0 in the y in the sprite sheet)
 */
-Animated_Sprite::Animated_Sprite(Graphics& graphics, std::string fileName, const float x, const float y, sprite_pose starting_pose, sprite_facing starting_facing) :
-Sprite(graphics, fileName, x, y, 32, 32),
-m_current_frame{0},
-m_current_sprite_pose{ starting_pose },
-m_current_facing{ starting_facing }
+Animated_Sprite::Animated_Sprite(Graphics& graphics, std::string fileName, const float x, const float y, sprite_facing starting_facing, sprite_pose starting_pose) :
+	Sprite(graphics, fileName, x, y, 32, 32),
+	m_current_frame{0},
+	m_current_sprite_pose{ starting_pose },
+	m_current_facing{ starting_facing }
 {
 	const int height = 32, width = 32;
 
