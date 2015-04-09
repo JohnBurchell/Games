@@ -1,54 +1,54 @@
 #include "projectile.h"
 
 Projectile::Projectile(Graphics& graphics, float x, float y, float velocity) :
-	x_{ x },
-	y_{ y },
-	velocity_{ velocity },
-	collided{false}
+	m_x{ x },
+	m_y{ y },
+	m_velocity{ velocity },
+	m_collided{false}
 {
 	sprite_.reset(new Sprite(graphics, "resources/sprites/bulletTest.bmp", 0, 0, 32, 32));
 }
 
 void Projectile::draw(Graphics& graphics, float cameraX, float cameraY)
 {
-	sprite_->draw(graphics, x_ - cameraX, y_ - cameraY);
+	sprite_->draw(graphics, m_x - cameraX, m_y - cameraY);
 }
 
 void Projectile::update(uint32_t time_ms, const TileMap& map)
 {
-	float delta = velocity_ * time_ms;
+	float delta = m_velocity * time_ms;
 
 	auto result = map.getCollisionTilesTest(getDamageRectangle(delta));
 	auto collisionResult = getCollisionResult(result, getDamageRectangle(delta));
 
 	if (collisionResult.collided) {
-		collided = true;
-		x_ = collisionResult.x - getDamageRectangle(delta).width();
+		m_collided = true;
+		m_x = collisionResult.x - getDamageRectangle(delta).width();
 	}
 	else {
-		x_ += delta;
+		m_x += delta;
 	}
 }
 
-bool Projectile::hasCollided() const
+bool Projectile::has_collided() const
 {
-	return collided;
+	return m_collided;
 }
 
 void Projectile::collision()
 {
-	collided = true;
+	m_collided = true;
 }
 
 BoundingBox Projectile::getDamageRectangle(float delta) const
 {
 	if (delta < 0)
 	{
-		return BoundingBox{ x_ + 16, y_ + 5, 16 + delta, 5 };
+		return BoundingBox{ m_x + 16, m_y + 5, 16 + delta, 5 };
 	}
 	else
 	{
-		return BoundingBox{ x_ + 16, y_ + 5 + delta, 16 - delta, 5 };
+		return BoundingBox{ m_x + 16, m_y + 5 + delta, 16 - delta, 5 };
 	}
 }
 
@@ -64,9 +64,4 @@ Projectile::CollisionResult Projectile::getCollisionResult(std::vector<TileMap::
 		}
 	}
 	return result;
-}
-
-Projectile::~Projectile()
-{
-
 }

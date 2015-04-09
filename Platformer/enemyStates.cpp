@@ -25,7 +25,7 @@ void IdleState::execute(Enemy* enemy)
 	}
 	else 
 	{
-		enemy->wander();
+		//enemy->wander();
 	}
 }
 

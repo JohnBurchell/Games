@@ -87,17 +87,22 @@ Graphics::~Graphics()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	for (auto& x : loadedImages)
+	{
+		SDL_DestroyTexture(x.second);
+	}
 }
 
 
-void Graphics::renderLine(int originX, int originY, int targetX, int targetY)
+void Graphics::renderLine(float originX, float originY, float targetX, float targetY)
 {
 	SDL_SetRenderDrawColor(renderer, 200, 200, 110, 32);
 
 	SDL_RenderDrawLine(renderer, originX + 16, originY + 16, targetX + 16, targetY + 16);
 }
 //Remove later
-void Graphics::render_rectanlge(const int pos_x, const int pos_y, const int colour, int width, int height)
+void Graphics::render_rectanlge(const float pos_x, const float pos_y, const int colour, int width, int height)
 {
 	SDL_Color col;
 	switch (colour) {
@@ -139,4 +144,10 @@ void Graphics::render_rectanlge(const int pos_x, const int pos_y, const int colo
 	SDL_Rect rect = { pos_x, pos_y, width, height };
 	SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
 	SDL_RenderFillRect(renderer, &rect);
+}
+
+void Graphics::update_FPS(const std::string fps)
+{
+	std::string fps_and_title = "Platformer - Last Frame: " + fps;
+	SDL_SetWindowTitle(window, fps_and_title.c_str());
 }

@@ -23,10 +23,11 @@ class Graphics
 
 		void renderTexture(SDL_Texture* texture, const SDL_Rect destination, const SDL_Rect* clip = nullptr) const;
 		void renderTexture(SDL_Texture* texture, const int x, const int y, const SDL_Rect* clip = nullptr) const;
+		void update_FPS(const std::string fps);
 		
 		//REMOVE LATER - Debugging
-		void render_rectanlge(const int pos_x, const int pos_y, const int colour, int width = 32, int height = 32);
-		void renderLine(int originX, int originY, int targetX, int targetY);
+		void render_rectanlge(const float pos_x, const float pos_y, const int colour, int width = 32, int height = 32);
+		void renderLine(float originX, float originY, float targetX, float targetY);
 
 		class Renderer_Error{};
 		class Window_Error{};

@@ -16,21 +16,20 @@ class Projectile
 
 	public:
 		Projectile(Graphics& graphics, float x, float y, float velocity);
-		~Projectile();
 
 		void draw(Graphics& graphics, float cameraX, float cameraY);
 		void update(uint32_t time_ms, const TileMap& map);
 	
 		BoundingBox getDamageRectangle(float delta) const;
 
-		inline float getPos() { return x_; };
+		inline float getPos() { return m_x; };
 
-		bool hasCollided() const;
+		bool has_collided() const;
 		void collision();
 
 	private:
-		float x_, y_, velocity_;
-		bool collided;
+		float m_x, m_y, m_velocity;
+		bool m_collided;
 
 		struct CollisionResult
 		{

@@ -14,7 +14,7 @@ public:
 	virtual ~BaseGameEntity() {};
 
 	virtual void update(uint32_t elapsed_time, TileMap& map) = 0;
-	virtual void draw(float cameraX, float cameraY) = 0;
+	virtual void draw(const float cameraX, const float cameraY) = 0;
 
 };
 
