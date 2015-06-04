@@ -4,13 +4,8 @@
 
 G_Interface::G_Interface(Graphics& graphics) :
 
-buttons(0),
-type(UI_Type::PLAYING)
-{
-};
-
-G_Interface::G_Interface() 
-
+buttons( 0 ),
+type( UI_Type::PLAYING )
 {};
 
 void G_Interface::setup_main_menu(Graphics& graphics)
@@ -48,7 +43,7 @@ void G_Interface::create_button(Graphics& graphics, std::string id, std::string 
 	Button button{ graphics, height, width };
 	button.label = label;
 	button.id = id;
-	button.set_position(Constants::SCREEN_WIDTH / 2 - pos_x, pos_y);
+	button.set_position(Constants::screen_width / 2 - pos_x, pos_y);
 	buttons.push_back(button);
 }
 
@@ -142,13 +137,13 @@ std::vector<G_Interface::Player_Record> G_Interface::get_players()
 
 	file.close();
 
-	auto compare = [](const Player_Record& a, const Player_Record& b) { return std::stoi(a.score) > std::stoi(b.score); };
+	auto compare = [](Player_Record& a, Player_Record& b) { return std::stoi(a.score) > std::stoi(b.score); };
 	std::sort(names.begin(), names.end(), compare);
 
 	return names;
 }
 
-Button::Button(Graphics& graphics, const int height, const int width) :
+Button::Button(Graphics& graphics, int height, int width) :
 
 current_state(Mouse_State::NO_CHANGE),
 height(height),
@@ -161,19 +156,7 @@ width(width)
 	source_rect.y = 0;
 	source_rect.w = width;
 	source_rect.h = height;
-	button_texture = graphics.load_image("../../images/buttons_1.bmp", true);
-};
-
-Button::Button() :
-
-current_state(Mouse_State::NO_CHANGE),
-height(0),
-width(0)
-
-{
-	position.x = 0;
-	position.y = 0;
-
+	button_texture = graphics.load_image("images/buttons_1.bmp", true);
 };
 
 void Button::set_position(const int x, const int y)
@@ -244,9 +227,10 @@ std::string Button::handle_event(SDL_Event* e)
 	return "no_action";
 }
 
+//Graphics ref probably needed here.
 void Button::draw(Graphics& graphics)
 {
-	graphics.render_texture(button_texture, position.x, position.y, &source_rect);
+	graphics.render_texture(*button_texture, position.x, position.y, &source_rect);
 	graphics.draw_text_to_pixel(label, position.x + (width / 2) - label.length() - 45, position.y + (height / 2 - 10));
 }
 

@@ -1,12 +1,9 @@
-#pragma once
+#ifndef SOUND_H_
+#define SOUND_H_
 
-#ifdef _WIN32
 #include <SDL_mixer.h>
-#endif
+#include <memory>
 
-#ifdef __linux__
-#include <SDL2/SDL_mixer.h>
-#endif
 #include "common.h"
 
 class Sound
@@ -17,6 +14,13 @@ public:
 
 	class Sound_Failure{};
 
+	//Disable copy
+	Sound(const Sound& rhs) = delete;
+	Sound operator=(const Sound& rhs) = delete;
+	//Disable move
+	Sound(Sound&& rhs) = delete;
+	Sound operator=(Sound&& rhs) = delete;
+
 	void play_music();
 	void pause_music();
 	void stop_music();
@@ -26,9 +30,11 @@ private:
 
 	void load_resource(std::string resource_path);
 
-	const std::string music_path = "../../music/theme.ogg";
+	const std::string music_path = "music/theme.ogg";
 
-	Mix_Music* theme;
+	std::unique_ptr<Mix_Music*> theme;
 
 };
+
+#endif //SOUND_H_
 

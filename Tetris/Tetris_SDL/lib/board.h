@@ -14,6 +14,10 @@ public :
 	Board();
 	~Board();
 
+	//Disable copying
+	Board(const Board& rhs) = delete;
+	Board operator=(const Board& rhs) = delete;
+
 	void new_game();
 
 	std::vector< std::vector<int> > board;

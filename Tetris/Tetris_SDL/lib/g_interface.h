@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include <map>
 #include <string>
+#include <memory>
 
 class Graphics;
 
@@ -20,8 +21,9 @@ class Button {
 
 public:
 
-	Button();
-	Button(Graphics& graphics, const int height, const int width);
+	//Default constructor required when using [] operator for maps
+	Button() = default;
+	Button(Graphics& graphics, int height, int width);
 
 	void set_position(const int x, const int y);
 
@@ -30,7 +32,6 @@ public:
 	void draw(Graphics& graphics);
 
 	std::string id, label;
-	
 
 private:
 
@@ -39,18 +40,18 @@ private:
 	SDL_Point position;
 	SDL_Rect source_rect, desination_rect;
 	Mouse_State current_state;
-	SDL_Texture* button_texture;
+	std::shared_ptr<SDL_Texture*> button_texture;
 };
-
 
 class G_Interface
 {
 public:
 
-	 G_Interface(Graphics& grpahics);
-	 G_Interface();
+	//Default constructor required when using [] operator for maps
+	G_Interface() = default;
+	G_Interface(Graphics& grpahics);
 
-	 void create_button(Graphics& graphics, std::string label, std::string id, int height, int width, int pos_x, int pos_y);
+	void G_Interface::create_button(Graphics& graphics, std::string label, std::string id, int height, int width, int pos_x, int pos_y);
 
 	void setup_main_menu(Graphics& graphics);
 	void setup_pause(Graphics& graphics);

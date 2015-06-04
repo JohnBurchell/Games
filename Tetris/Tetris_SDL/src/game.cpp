@@ -5,6 +5,7 @@
 #include <sstream>
 #include <ctime>
 #include <fstream>
+#include <memory>
 
 using namespace std::chrono;
 
@@ -39,7 +40,9 @@ void Game::start_new_game()
 	level = 0;
 	time_taken = 0;
 	game_start = std::chrono::system_clock::now();
+	//Cannot send an empty string to the UI when collecting the player name.
 	player_name = " ";
+	new_game = true;
 }
 
 
@@ -75,11 +78,13 @@ void Game::run()
 
 	int frames_passed = 0;
 
-	while (playing) {
+	while (playing) 
+	{
 
 		frame_start = Clock::now();
 
-		if (new_game){
+		if (new_game)
+		{
 			start_new_game();
 		}
 
@@ -88,29 +93,33 @@ void Game::run()
 
 		std::string player_name;
 
-		switch (current_state){
+		switch (current_state)
+		{
 		case Game_State::MAIN_MENU:
 			sound.stop_music();
 			break;
 
 		case Game_State::PLAYING:
 			//Get start time.
-			if (new_game) {
+			if (new_game) 
+			{
 				//Start of a new game
 				sound.play_music();
 				game_start = std::chrono::system_clock::now();
 				new_game = false;
 			}
-			else if (Mix_PausedMusic()){
+			else if (Mix_PausedMusic())
+			{
 				pause_end = Clock::now();
 				pause_duration += duration_cast<seconds>(pause_end - pause_start).count();
 				sound.unpause_music();
 			}
 			//If the current shape is empty, it means there's nothing active.
-			if (!board.falling_shape) {
+			if (!board.falling_shape) 
+			{
 				current_shape = next_shape;
 				ghost_shape = next_shape;
-				ghost_shape.colour = Colour::TRANS;
+				ghost_shape.colour = Tetris_Shape::Colour::TRANS;
 				ghost_shape.setable = false;
 				board.falling_shape = true;
 				random_piece();
@@ -119,7 +128,8 @@ void Game::run()
 				fall_timer = Clock::now();
 			}
 
-			if (board.game_over){
+			if (board.game_over)
+			{
 				current_state = Game_State::SCORING;
 			}
 
@@ -170,7 +180,8 @@ void Game::run()
 void Game::draw(Graphics& graphics)
 {
 	graphics.clear();
-	if (current_state == Game_State::PLAYING || current_state == Game_State::PAUSED) {
+	if (current_state == Game_State::PLAYING || current_state == Game_State::PAUSED) 
+	{
 		current_shape.draw_current(graphics);
 		//ghost_shape.draw_current(graphics);
 		next_shape.draw_next(graphics);
@@ -182,13 +193,14 @@ void Game::draw(Graphics& graphics)
 }
 
 /*
-	Drops pieces of allotted time has passed and checks for whole lines.
+	Drops pieces of alloted time has passed and checks for whole lines.
 */
 
 void Game::update() 
 {
 	//If enough time has passed, drop blocks.
-	if(current_state == Game_State::PLAYING && drop_timer()){
+	if(current_state == Game_State::PLAYING && drop_timer())
+	{
 		board.drop_pieces(current_shape, false);
 		//ghost_shape.x = current_shape.x;
 		//ghost_shape.y = current_shape.y;
@@ -201,15 +213,18 @@ void Game::update()
 
 void Game::input()
 {
-	/*Handles the input, moving and rotating shapes when need be.*/
+	/*Handles the input, moving and rotating shpaes when need be.*/
 	SDL_Event event;
     while(SDL_PollEvent(&event))
     {
-		if (current_state == Game_State::PLAYING) {
+		if (current_state == Game_State::PLAYING) 
+		{
 			//If cross clicked, exit.
-			switch (event.type){
+			switch (event.type)
+			{
 			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {
+				switch (event.key.keysym.sym) 
+				{
 				case SDLK_ESCAPE:
 					current_state = Game_State::PAUSED;
 					break;
@@ -235,91 +250,121 @@ void Game::input()
 			}
 		}
 
-		else if (current_state == Game_State::PAUSED){
-			if (event.type == SDL_KEYDOWN) {
-				switch (event.key.keysym.sym) {
+		else if (current_state == Game_State::PAUSED)
+		{
+			if (event.type == SDL_KEYDOWN) 
+			{
+				switch (event.key.keysym.sym) 
+				{
 				case SDLK_ESCAPE:
 					current_state = Game_State::PLAYING;
 					break;
 				}
 			}
-			for (auto& x : menus["Pause"].buttons){
+			for (auto& x : menus["Pause"].buttons)
+			{
 				std::string result = x.handle_event(&event);
-				if (result != "no_action") {
-					if (result == "Play"){
+				if (result != "no_action") 
+				{
+					if (result == "Play")
+					{
 						current_state = Game_State::PLAYING;
 					}
-					else if (result == "Main"){
+					else if (result == "Main")
+					{
 						new_game = true;
 						current_state = Game_State::MAIN_MENU;
 					}
-					else if (result == "Exit"){
+					else if (result == "Exit")
+					{
 						current_state = Game_State::FINISHED;
 					}
 				}
 			}
 		}
 
-		else if (current_state == Game_State::MAIN_MENU){
-			for (auto& x : menus["Main"].buttons){
+		else if (current_state == Game_State::MAIN_MENU)
+		{
+			for (auto& x : menus["Main"].buttons)
+			{
 				std::string result = x.handle_event(&event);
-				if (result != "no_action") {
+				if (result != "no_action") 
+				{
 
-					if (result == "Play"){
+					if (result == "Play")
+					{
 						start_new_game();
 						current_state = Game_State::PLAYING;
 					}
-					else if (result == "Score"){
+					else if (result == "Score")
+					{
 						current_state = Game_State::HIGH_SCORE;
 					}
-					else if (result == "Exit"){
+					else if (result == "Exit")
+					{
 						current_state = Game_State::FINISHED;
 					}
 				}
 			}
 		}
 
-		else if (current_state == Game_State::HIGH_SCORE){
-			for (auto& x : menus["High_Score"].buttons){
+		else if (current_state == Game_State::HIGH_SCORE)
+		{
+			for (auto& x : menus["High_Score"].buttons)
+			{
 				std::string result = x.handle_event(&event);
-				if (result != "no_action") {
+				if (result != "no_action") 
+				{
 
-					if (result == "Main"){
+					if (result == "Main")
+					{
 						current_state = Game_State::MAIN_MENU;
 					}
-					else if (result == "Exit"){
+					else if (result == "Exit")
+					{
 						current_state = Game_State::FINISHED;
 					}
 				}
 			}
 		}
-		else if (current_state == Game_State::SCORING) {
-			for (auto& x : menus["Score"].buttons){
+		else if (current_state == Game_State::SCORING) 
+		{
+			for (auto& x : menus["Score"].buttons)
+			{
 				std::string result = x.handle_event(&event);
-				if (result != "no_action") {
+				if (result != "no_action") 
+				{
 					SDL_StopTextInput();
 
-					if (result == "Main"){
+					if (result == "Main")
+					{
 						current_state = Game_State::MAIN_MENU;
 					}
-					else if (result == "Exit"){
+					else if (result == "Exit")
+					{
 						current_state = Game_State::FINISHED;
 					}
 				}
 			}
-			if (!SDL_IsTextInputActive()){
+			if (!SDL_IsTextInputActive())
+			{
 				SDL_StartTextInput();
 			}
-			if (event.type == SDL_KEYDOWN){
-				if (event.key.keysym.sym == SDLK_BACKSPACE && player_name.length() > 1){
+			if (event.type == SDL_KEYDOWN)
+			{
+				if (event.key.keysym.sym == SDLK_BACKSPACE && player_name.length() > 1)
+				{
 					player_name.pop_back();
 				}
-				else if (event.key.keysym.sym == SDLK_BACKSPACE && player_name.length() <= 1){
+				else if (event.key.keysym.sym == SDLK_BACKSPACE && player_name.length() <= 1)
+				{
 					player_name.pop_back();
 					player_name += " ";
 				}
-				else if (event.key.keysym.sym == SDLK_RETURN){
-					if (player_name.length() <= 0) {
+				else if (event.key.keysym.sym == SDLK_RETURN)
+				{
+					if (player_name.length() <= 0) 
+					{
 						save_player("NO_NAME");
 					}
 					save_player(player_name);
@@ -327,9 +372,12 @@ void Game::input()
 					current_state = Game_State::HIGH_SCORE;
 				}
 			}
-			else if (event.type == SDL_TEXTINPUT){
-				if (!((event.text.text[0] == 'c' || event.text.text[0] == 'C') && (event.text.text[0] == 'v' || event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL)) {
-					if (player_name == " "){
+			else if (event.type == SDL_TEXTINPUT)
+			{
+				if (!((event.text.text[0] == 'c' || event.text.text[0] == 'C') && (event.text.text[0] == 'v' || event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL)) 
+				{
+					if (player_name == " ")
+					{
 						//Remove blank space.
 						player_name.pop_back();
 					}
@@ -359,21 +407,27 @@ void Game::is_whole_line()
 	//Sum for calculating a whole line.
 	int sum;
 
-	for (int i = 0; i < Constants::BOARD_ROWS; i++) {
+	for (int i = 0; i < Constants::board_rows; ++i) 
+	{
 		sum = 0;
-		for (int j = 0; j < Constants::BOARD_COLS; j++) {
-			if(board.board[i][j] > 0) {
+		for (int j = 0; j < Constants::board_cols; ++j) 
+		
+		{
+			if(board.board[i][j] > 0) 
+			{
 				sum++;
 			}
 		}
 
-		if(sum == Constants::BOARD_COLS) {
+		if(sum == Constants::board_cols) 
+		{
 			board.clear_line(i);
 			score += 10;
 			line_count++;
 			//If it's divisible by 3 again, another 3 lines have been reached so
 			//The level goes up.
-			if (line_count % 3 == 0) {
+			if (line_count % 3 == 0) 
+			{
 				level++;
 			}
 		}
@@ -394,12 +448,13 @@ bool Game::drop_timer()
 	duration<double> life_time = milliseconds(500 - ((level - 1) * 20));
 
 	//Force the speed to remain positive if it's gone below 0.0
-	if(life_time.count() <= 0.0) {
-
+	if(life_time.count() <= 0.0) 
+	{
 		life_time = milliseconds(100);
 	}
 
-	if (Clock::now() >= fall_timer + life_time){
+	if (Clock::now() >= fall_timer + life_time)
+	{
 		//Reset time to current time
 		fall_timer = Clock::now();
 		return true;
@@ -411,20 +466,24 @@ bool Game::drop_timer()
 std::string Game::calc_time(uint64_t time_taken)
 {
 	std::stringstream stream;
-	if (time_taken >= 60) {
+	if (time_taken >= 60) 
+	{
 		//Perform clipping
 		uint64_t mins = 0, secs = 0;
 		mins = time_taken / 60;
 		secs = time_taken % 60;
 		stream << mins << ":";
-		if (secs < 10){
+		if (secs < 10)
+		{
 			stream << "0";
 		}
 		stream << secs;
 	}
-	else {
+	else 
+	{
 		stream << "0:";
-		if (time_taken < 10){
+		if (time_taken < 10)
+		{
 			stream << "0";
 		}
 		stream << time_taken;
@@ -439,10 +498,12 @@ std::string Game::calc_time(uint64_t time_taken)
 
 void Game::gui(Graphics& graphics)
 {
-	if (current_state == Game_State::MAIN_MENU) {
+	if (current_state == Game_State::MAIN_MENU) 
+	{
 		menus["Main"].render_ui(graphics);
 	}
-	else if (current_state == Game_State::SCORING) {
+	else if (current_state == Game_State::SCORING) 
+	{
 		std::map<std::string, std::string> values;
 
 		values["Score"] = std::to_string(score);
@@ -454,13 +515,15 @@ void Game::gui(Graphics& graphics)
 		menus["Score"].render_ui(graphics);
 
 	}
-	else if (current_state == Game_State::HIGH_SCORE) {
+	else if (current_state == Game_State::HIGH_SCORE) 
+	{
 		std::map<std::string, std::string> values;
 
 		menus["High_Score"].render_ui(graphics);
 	}
 	//Else we're playing
-	else {
+	else 
+	{
 		std::map<std::string, std::string> values;
 
 		//Locations are given in terms of tile size, 32
@@ -471,13 +534,14 @@ void Game::gui(Graphics& graphics)
 		menus["Play_Screen"].update(values);
 		menus["Play_Screen"].render_ui(graphics);
 
-		if (current_state == Game_State::PAUSED){
+		if (current_state == Game_State::PAUSED)
+		{
 			menus["Pause"].render_ui(graphics);
 		}
 	}
 }
 
-void Game::save_player(std::string name)
+void Game::save_player(const std::string& name)
 {
 	std::ofstream file;
 	file.open("players.dat", std::ios::out | std::ios::app);
@@ -668,28 +732,25 @@ void Game::create_shapes() {
 
 	//Iterator for stored shapes.
 	//I = Piece index
-	for(int i = 0; i < 7; i++) {
-		Tetris_Shape* shape = new Tetris_Shape();
+	for(int i = 0; i < 7; ++i) 
+	{
+		std::unique_ptr<Tetris_Shape> shape = std::make_unique<Tetris_Shape>();
 		//r = rotation number
-		for(int r = 0; r < 4; r++) {
+		for(int r = 0; r < 4; ++r) 
+		{
 			//x = col
-			for(int x = 0; x < 4; x++) {
+			for(int x = 0; x < 4; ++x) 
+			{
 				//y = row
-				for(int y = 0; y < 4; y++) {
+				for(int y = 0; y < 4; ++y) 
+				{
 					//Fill the layouts of the shapes
 					shape->layouts[r][x][y] = rotations[i][r][x][y];
 				}
 			}
 			shape->change_rotation(0);
 		}
-		shape->colour = static_cast<Colour>(i + 1);
-		shapes.push_back(shape);
-	}
-}
-
-Game::~Game() 
-{
-	for (auto& x : shapes) {
-		delete(x);
+		shape->colour = static_cast<Tetris_Shape::Colour>(i + 1);
+		shapes.push_back(std::move(shape));
 	}
 }

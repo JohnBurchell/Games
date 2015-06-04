@@ -1,14 +1,15 @@
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef Game_H
+#define Game_H
 #pragma once
 
+#include "tetris_shape.h"
 #include "graphics.h"
 #include "board.h"
 #include "common.h"
 #include "sound.h"
-#include "tetris_shape.h"
 #include "g_interface.h"
-#include <map>
+#include <unordered_map>
+#include <memory>
 
 class Graphics;
 class G_Interface;
@@ -30,7 +31,6 @@ class Game {
 public:
 
 	Game();
-	~Game();
 
 private:
 
@@ -44,7 +44,7 @@ private:
 	
 	uint64_t pause_duration, total_time;
 
-	std::vector<Tetris_Shape*> shapes;
+	std::vector<std::unique_ptr<Tetris_Shape>> shapes;
 
 	//Board
 	Board board;
@@ -78,11 +78,11 @@ private:
 	uint64_t time_taken;
 
 	Game_State current_state;
-	std::map<std::string, G_Interface> menus;
+	std::unordered_map<std::string, G_Interface> menus;
 	std::string action;
 	std::string player_name;
 
-	void save_player(std::string name);
+	void save_player(const std::string& name);
 };
 
 #endif //GAME_H_
