@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11    CMakeFiles/Tetris.dir/run.cpp.o  -o Tetris -rdynamic -lSDL2 -lSDL2_image -lSDL2 -lSDL2_ttf -lSDL2 -lSDL2_mixer -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer 
