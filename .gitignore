@@ -27,3 +27,4 @@ Platformer/Release/
 *.idb
 Tetris/Tetris_Project/Tetris_Project/Debug/vc140.pdb
 *.pdb
+*.dll
