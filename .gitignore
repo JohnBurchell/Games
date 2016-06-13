@@ -21,10 +21,9 @@ Platformer/Release/
 *.obj
 *.log
 *.tlog
-Tetris/Tetris_Project/Tetris_Project/Debug/Tetris_Project.tlog/CL.command.1.tlog
-*.tlog
 *.lastbuildstate
-Tetris/Tetris_Project/Tetris_Project/Debug/vc140.idb
 *.filters
-Tetris/Tetris_Project/Debug/Tetris_Project.pdb
 *.db
+*.idb
+Tetris/Tetris_Project/Tetris_Project/Debug/vc140.pdb
+*.pdb
