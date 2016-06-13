@@ -9,7 +9,8 @@
 
 namespace 
 {
-	const std::string FONT_NAME = "fonts/kenpixel.ttf";
+	constexpr char* font_name = "fonts/kenpixel.ttf";
+	constexpr int font_size = 16;
 }
 
 struct Text_Info

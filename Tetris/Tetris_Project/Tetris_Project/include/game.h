@@ -16,8 +16,8 @@ class Graphics;
 
 class Game {
 
-	enum class Game_State{
-
+	enum class Game_State
+	{
 		SPLASH,
 		MAIN_MENU,
 		HIGH_SCORE,
@@ -55,7 +55,7 @@ private:
 	void random_piece();
 	void input();
 
-
+	void test_rotate();
 
 	//Check if a line needs to be removed or not.
 	void is_whole_line();
@@ -81,6 +81,8 @@ private:
 	std::unordered_map<std::string, G_Interface> menus;
 	std::string action;
 	std::string player_name;
+
+	int m_test_shape[4][4];
 
 	void save_player(const std::string& name);
 };

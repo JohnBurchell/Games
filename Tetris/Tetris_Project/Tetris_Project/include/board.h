@@ -2,9 +2,12 @@
 #define BOARD_H
 #pragma once
 
-#include "tetris_shape.h"
-
 class Graphics;
+class Tetris_Shape;
+
+#include <vector>
+#include <SDL.h>
+#include <memory>
 
 class Board {
 

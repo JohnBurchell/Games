@@ -1,6 +1,5 @@
 #include "game.h"
 #include "graphics.h"
-#include "sound.h"
 #include <sstream>
 #include <ctime>
 #include <fstream>
@@ -34,6 +33,20 @@ Game::Game() :
 	m_new_game(true),
 	m_sound_toggled(true)
 {
+	int shape [4][4] =
+	{ { 1,2,1,0 },
+	  { 0,0,0,0 },
+	  { 0,0,0,0 },
+	  { 0,0,0,0 } };
+
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			m_test_shape[i][j] = shape[i][j];
+		}
+	}
+
 	SDL_Init(SDL_INIT_EVERYTHING);
 	run();
 }
@@ -600,6 +613,11 @@ void Game::save_player(const std::string& name)
 	file.close();
 }
 
+
+//An alternative is to have one layout for each shape. Each shape would have
+//a point of rotation which is used to re-align the origin of the rotation
+//this would mean less memory being used to store the rotations, but would
+//probably be slower than pre-computing the rotations.
 void Game::create_shapes(Graphics& graphics) {
 
 	//First, define the layouts of the shapes.
@@ -785,16 +803,16 @@ void Game::create_shapes(Graphics& graphics) {
 		std::unique_ptr<Tetris_Shape> shape = std::make_unique<Tetris_Shape>(0, 0);
 		shape->set_texture(graphics);
 		//r = rotation number
-		for(int r = 0; r < 4; ++r) 
+		for(int rot = 0; rot < 4; ++rot)
 		{
 			//x = col
-			for(int x = 0; x < 4; ++x) 
+			for(int col = 0; col < 4; ++col) 
 			{
 				//y = row
-				for(int y = 0; y < 4; ++y) 
+				for(int row = 0; row < 4; ++row) 
 				{
 					//Fill the layouts of the shapes
-					shape->m_layouts[r][x][y] = rotations[i][r][x][y];
+					shape->m_layouts[rot][col][row] = rotations[i][rot][col][row];
 				}
 			}
 			shape->change_rotation(0);

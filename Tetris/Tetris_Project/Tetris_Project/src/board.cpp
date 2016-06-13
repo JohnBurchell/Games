@@ -1,5 +1,6 @@
 #include "board.h"
 #include "graphics.h"
+#include "tetris_shape.h"
 
 namespace
 {

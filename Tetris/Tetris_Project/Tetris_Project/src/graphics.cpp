@@ -74,7 +74,7 @@ Graphics::Graphics(const int screen_width, const int screen_height) :
 		std::cout << "Unable to initialise TTF! " << TTF_GetError() << std::endl;
 	}
 
-	font = TTF_OpenFont(FONT_NAME.c_str(), 16);
+	font = TTF_OpenFont(font_name, font_size);
 	if (font == nullptr)
 	{
 		std::cout << "Error opening font! " << TTF_GetError() << std::endl;
