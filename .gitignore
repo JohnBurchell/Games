@@ -10,9 +10,6 @@
 *.dat
 
 #MSVS Files
-*.vcxproj
-Platformer/Debug/
-Platformer/Release/
 *.idp
 *.pbp
 *.obj
@@ -22,9 +19,7 @@ Platformer/Release/
 *.log
 *.tlog
 *.lastbuildstate
-*.filters
 *.db
 *.idb
-Tetris/Tetris_Project/Tetris_Project/Debug/vc140.pdb
 *.pdb
 *.dll

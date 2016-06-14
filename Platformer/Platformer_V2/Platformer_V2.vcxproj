@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_No_Console|Win32">
+      <Configuration>Release_No_Console</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\actor.cpp" />
+    <ClCompile Include="src\animated_sprite.cpp" />
+    <ClCompile Include="src\background.cpp" />
+    <ClCompile Include="src\enemy.cpp" />
+    <ClCompile Include="src\enemyStates.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\input_component.cpp" />
+    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\projectile.cpp" />
+    <ClCompile Include="src\run.cpp" />
+    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\sprite.cpp" />
+    <ClCompile Include="src\tileMap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\actor.h" />
+    <ClInclude Include="include\animated_sprite.h" />
+    <ClInclude Include="include\background.h" />
+    <ClInclude Include="include\baseGameEntity.h" />
+    <ClInclude Include="include\boundingBox.h" />
+    <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\enemy.h" />
+    <ClInclude Include="include\enemyStates.h" />
+    <ClInclude Include="include\entity.h" />
+    <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\graphics.h" />
+    <ClInclude Include="include\input.h" />
+    <ClInclude Include="include\input_component.h" />
+    <ClInclude Include="include\moveableEntity.h" />
+    <ClInclude Include="include\moveable_entity.h" />
+    <ClInclude Include="include\player.h" />
+    <ClInclude Include="include\projectile.h" />
+    <ClInclude Include="include\rendering_system.h" />
+    <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\sprite.h" />
+    <ClInclude Include="include\state.h" />
+    <ClInclude Include="include\system.h" />
+    <ClInclude Include="include\tileMap.h" />
+    <ClInclude Include="include\vector2d.h" />
+    <ClInclude Include="include\visual.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9877A380-9934-4FD4-951A-DB28CBD768D7}</ProjectGuid>
+    <RootNamespace>Platformer_V2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_No_Console|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_No_Console|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\CPPLibs\SDL2-2.0.3\include;D:\CPPLibs\include;C:\Users\johbu\Desktop\Games\Platformer\Platformer_V2\include;D:\CPPLibs\include;D:\CPPLibs\SDL2_ttf-2.0.12\include;D:\CPPLibs\SDL2_mixer-2.0.0\include;D:\CPPLibs\SDL2_image-2.0.0\include;D:\CPPLibs\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\CPPLibs\SDL2-2.0.3\lib\x86;D:\CPPLibs\libs;D:\CPPLibs\SDL2_ttf-2.0.12\lib\x86;D:\CPPLibs\SDL2_mixer-2.0.0\lib\x86;D:\CPPLibs\SDL2_image-2.0.0\lib\x86;D:\CPPLibs\libs;D:\CPPLibs\SDL2-2.0.3\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\CPPLibs\SDL2-2.0.3\include;D:\CPPLibs\include;C:\Users\johbu\Desktop\Games\Platformer\Platformer_V2\include;E:\CPPLibs\SDL2_ttf-2.0.12\include;E:\CPPLibs\SDL2_mixer-2.0.0\include;E:\CPPLibs\SDL2_image-2.0.0\include;E:\CPPLibs\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>D:\CPPLibs\SDL2-2.0.3\lib\x86;D:\CPPLibs\libs;E:\CPPLibs\SDL2_ttf-2.0.12\lib\x86;E:\CPPLibs\SDL2_mixer-2.0.0\lib\x86;E:\CPPLibs\SDL2_image-2.0.0\lib\x86;E:\CPPLibs\SDL2-2.0.3\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_No_Console|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\CPPLibs\SDL2-2.0.3\include;D:\CPPLibs\include;C:\Users\johbu\Desktop\Games\Platformer\Platformer_V2\include;E:\CPPLibs\SDL2_ttf-2.0.12\include;E:\CPPLibs\SDL2_mixer-2.0.0\include;E:\CPPLibs\SDL2_image-2.0.0\include;E:\CPPLibs\SDL2-2.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>D:\CPPLibs\SDL2-2.0.3\lib\x86;D:\CPPLibs\libs;E:\CPPLibs\SDL2_ttf-2.0.12\lib\x86;E:\CPPLibs\SDL2_mixer-2.0.0\lib\x86;E:\CPPLibs\SDL2_image-2.0.0\lib\x86;E:\CPPLibs\SDL2-2.0.3\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
