@@ -338,7 +338,20 @@ void mouse_button_click_callback(GLFWwindow* window, int button, int action, int
 		std::cout << "2D Coords: X: " << x_pos << " Y: " << y_pos << "\n";
 
 		GLdouble obj_x, obj_y, obj_z;
-		//Start trying to cast a ray straight from the camera
+
+		glm::mat4 view = camera.get_view_matrix();
+		glm::mat4 projection = glm::perspective(camera.m_zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+
+		auto clip_space = projection * view;
+		auto res = glm::unProject(glm::fvec3{ x_pos, y_pos, 1.0f }, view, projection, glm::vec4{ 0, 0, screenWidth, screenHeight });
+		auto res_2 = clip_space * glm::fvec4{ x_pos, y_pos, 1.0f, 0.0f };
+
+
+		std::cout << "3D Coords: X: " << res_2.x << " Y: " << res_2.y << " Z: " << res_2.z << "\n";
+		std::cout << "unproject 3D Coords: X: " << res.x << " Y: " << res.y << " Z: " << res.z << "\n";
+		auto test = true;
+		//Start trying to cast a ray straight from the camera after getting the position for the click.
+		//Getting this position is done by converting the screenspace co-ords into the world space co-ords
 	}
 }
 
