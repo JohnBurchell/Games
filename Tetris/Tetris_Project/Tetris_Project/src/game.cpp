@@ -33,20 +33,6 @@ Game::Game() :
 	m_new_game(true),
 	m_sound_toggled(true)
 {
-	int shape [4][4] =
-	{ { 1,2,1,0 },
-	  { 0,0,0,0 },
-	  { 0,0,0,0 },
-	  { 0,0,0,0 } };
-
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			m_test_shape[i][j] = shape[i][j];
-		}
-	}
-
 	SDL_Init(SDL_INIT_EVERYTHING);
 	run();
 }
@@ -75,6 +61,7 @@ void Game::run()
 	Graphics graphics{ screen_height, screen_width };
 	m_board.reset(new Board(graphics, board_cols, board_rows, tile_size));
 	m_sound.reset(new Sound());
+	m_sound->init_sounds();
 
 	create_shapes(graphics);
 
@@ -240,6 +227,7 @@ void Game::input()
     {
 		if (current_state == Game_State::PLAYING) 
 		{
+			bool result = false;
 			//If cross clicked, exit.
 			switch (event.type)
 			{
@@ -250,10 +238,18 @@ void Game::input()
 					current_state = Game_State::PAUSED;
 					break;
 				case SDLK_LEFT:
-					m_board->move_left(current_shape);
+					result = m_board->move_left(current_shape);
+					if (!result)
+					{
+						m_sound->play_sound("Wall_Hit");
+					}
 					break;
 				case SDLK_RIGHT:
-					m_board->move_right(current_shape);
+					result = m_board->move_right(current_shape);
+					if (!result)
+					{
+						m_sound->play_sound("Wall_Hit");
+					}
 					break;
 				case SDLK_UP:
 					m_board->rotate_piece(current_shape);
@@ -465,6 +461,7 @@ void Game::is_whole_line()
 {
 	//Sum for calculating a whole line.
 	int sum;
+	bool line_completed = false;
 
 	for (int i = 0; i < board_rows; ++i) 
 	{
@@ -480,6 +477,9 @@ void Game::is_whole_line()
 
 		if(sum == board_cols)
 		{
+			//Line completed
+			line_completed = true;
+
 			m_board->clear_line(i);
 			score += 10;
 			line_count++;
@@ -490,6 +490,11 @@ void Game::is_whole_line()
 				level++;
 			}
 		}
+	}
+
+	if (line_completed)
+	{
+		m_sound->play_sound("Line_Complete");
 	}
 }
 

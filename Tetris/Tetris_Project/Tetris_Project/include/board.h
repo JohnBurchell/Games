@@ -27,8 +27,8 @@ public :
 
 	void rotate_piece(Tetris_Shape& shape);
 	bool drop_pieces(Tetris_Shape& shape, const bool to_botom);
-	void move_right(Tetris_Shape& shape);
-	void move_left(Tetris_Shape& shape);
+	bool move_right(Tetris_Shape& shape);
+	bool move_left(Tetris_Shape& shape);
 	void set_piece(const Tetris_Shape& shape);
 	void clear_line(int i);
 

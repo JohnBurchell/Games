@@ -1,6 +1,6 @@
 #include "graphics.h"
 #include <iostream>
-#include "SDL_image.h">
+#include "SDL_image.h"
 
 namespace
 {

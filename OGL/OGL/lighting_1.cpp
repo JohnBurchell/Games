@@ -1,43 +1,60 @@
-// Std. Includes
 #include <string>
+#include <iostream>
 
-// GLEW
+//GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-// GLFW
+//GLFW
 #include <GLFW/glfw3.h>
 
-// GL includes
 #include "Shader.h"
 #include "Camera.h"
 
-// GLM Mathemtics
+//GLM Mathemtics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-// Other Libs
 #include <SOIL/SOIL.h>
 
-// Properties
-GLuint screenWidth = 800, screenHeight = 600;
+namespace
+{
+	// Properties
+	GLuint screenWidth = 800, screenHeight = 600;
+
+	// Camera
+	Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	bool keys[1024];
+	GLfloat lastX = 400, lastY = 300;
+	bool firstMouse = true;
+	bool cursor_hidden = false;
+
+	GLfloat deltaTime = 0.0f;
+	GLfloat lastFrame = 0.0f;
+
+	void show_cursor(GLFWwindow* window, bool hidden)
+	{
+		if (hidden)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			cursor_hidden = false;
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			cursor_hidden = true;
+		}
+	}
+}
+
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void Do_Movement();
+void mouse_button_click_callback(GLFWwindow* window, int button, int action, int mods);
+void handle_input(GLFWwindow* window);
 GLuint loadTexture(GLchar* path);
-
-// Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-bool keys[1024];
-GLfloat lastX = 400, lastY = 300;
-bool firstMouse = true;
-
-GLfloat deltaTime = 0.0f;
-GLfloat lastFrame = 0.0f;
 
 // The MAIN function, from here we start our application and run our Game loop
 int main()
@@ -49,16 +66,17 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "LearnOpenGL", nullptr, nullptr); // Windowed
+	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "Some OpenGL Testing", nullptr, nullptr); // Windowed
 	glfwMakeContextCurrent(window);
 
 	// Set the required callback functions
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_click_callback);
 
 	// Options
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	// Initialize GLEW to setup the OpenGL Function pointers
 	glewExperimental = GL_TRUE;
@@ -124,7 +142,7 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 	GLfloat planeVertices[] = {
-		// Positions            // Texture Coords (note we set these higher than 1 that together with GL_REPEAT as texture wrapping mode will cause the floor texture to repeat)
+		// Positions
 		5.0f,  -0.5f,  5.0f,  2.0f, 0.0f,
 		-5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
 		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
@@ -173,7 +191,7 @@ int main()
 
 		// Check and call events
 		glfwPollEvents();
-		Do_Movement();
+		handle_input(window);
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -277,20 +295,22 @@ GLuint loadTexture(GLchar* path)
 
 }
 
-#pragma region "User input"
-
 // Moves/alters the camera positions based on user input
-void Do_Movement()
+void handle_input(GLFWwindow* window)
 {
 	// Camera controls
 	if (keys[GLFW_KEY_W])
-		camera.process_keyboard(Camera_Movement::Forward, deltaTime);
+		camera.process_keyboard(Camera::Camera_Movement::Forward, deltaTime);
 	if (keys[GLFW_KEY_S])
-		camera.process_keyboard(Camera_Movement::Backward, deltaTime);
+		camera.process_keyboard(Camera::Camera_Movement::Backward, deltaTime);
 	if (keys[GLFW_KEY_A])
-		camera.process_keyboard(Camera_Movement::Left, deltaTime);
+		camera.process_keyboard(Camera::Camera_Movement::Left, deltaTime);
 	if (keys[GLFW_KEY_D])
-		camera.process_keyboard(Camera_Movement::Right, deltaTime);
+		camera.process_keyboard(Camera::Camera_Movement::Right, deltaTime);
+	if (keys[GLFW_KEY_Q])
+	{
+		show_cursor(window, cursor_hidden);
+	}
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -305,12 +325,29 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		keys[key] = false;
 }
 
+void mouse_button_click_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		//Button has been pressed, get x,y
+		GLdouble x_pos = 0.0;
+		GLdouble y_pos = 0.0;
+		glfwGetCursorPos(window, &x_pos, &y_pos);
+
+		std::cout << "Click registered \n";
+		std::cout << "2D Coords: X: " << x_pos << " Y: " << y_pos << "\n";
+
+		GLdouble obj_x, obj_y, obj_z;
+		//Start trying to cast a ray straight from the camera
+	}
+}
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
+		//force the cursor to the center of the screen first
+		glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
 		firstMouse = false;
 	}
 
@@ -327,5 +364,3 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.process_mouse_scroll(yoffset);
 }
-
-#pragma endregion

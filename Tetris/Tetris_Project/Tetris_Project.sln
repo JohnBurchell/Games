@@ -9,6 +9,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Debug|x86 = Debug|x86
+		Release_No_Console|Win32 = Release_No_Console|Win32
+		Release_No_Console|x86 = Release_No_Console|x86
 		Release|Win32 = Release|Win32
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -17,6 +19,10 @@ Global
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Debug|Win32.Build.0 = Debug|Win32
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Debug|x86.ActiveCfg = Debug|Win32
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Debug|x86.Build.0 = Debug|Win32
+		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release_No_Console|Win32.ActiveCfg = Release_No_Console|Win32
+		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release_No_Console|Win32.Build.0 = Release_No_Console|Win32
+		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release_No_Console|x86.ActiveCfg = Release_No_Console|Win32
+		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release_No_Console|x86.Build.0 = Release_No_Console|Win32
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release|Win32.ActiveCfg = Release|Win32
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release|Win32.Build.0 = Release|Win32
 		{9877A380-9934-4FD4-951A-DB28CBD768D7}.Release|x86.ActiveCfg = Release|Win32

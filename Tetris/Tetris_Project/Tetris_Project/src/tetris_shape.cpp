@@ -18,7 +18,6 @@ Tetris_Shape::Tetris_Shape(const int xPos, const int yPos, Colour colour) :
 	m_rotation{0},
 	m_colour{ colour },
 	m_setable{true}
-
 {
 	change_rotation(0);
 

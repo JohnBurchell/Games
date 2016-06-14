@@ -64,24 +64,30 @@ void Board::set_piece(const Tetris_Shape& shape)
 	Right key pressed movement
 	@argument Tetris_Shape
 */
-void Board::move_right(Tetris_Shape &shape)
+bool Board::move_right(Tetris_Shape &shape)
 {
 	shape.x(shape.x() + 1);
 
 	if (collision_right(shape))
 	{
 		shape.x(shape.x() - 1);
+		return false;
 	}
+
+	return true;
 }
 
-void Board::move_left(Tetris_Shape &shape)
+bool Board::move_left(Tetris_Shape &shape)
 {
 	shape.x(shape.x() - 1);
 
 	if (collision_left(shape))
 	{
 		shape.x(shape.x() + 1);
+		return false;
 	}
+
+	return true;
 }
 
 bool Board::drop_pieces(Tetris_Shape& shape, const bool to_bottom)
