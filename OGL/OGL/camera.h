@@ -81,6 +81,8 @@ public:
 	void process_mouse_movement(GLfloat x_offset, GLfloat y_offset, GLboolean constrain_pitch = true);
 	void process_mouse_scroll(GLfloat y_offset);
 
+	void calculate_view_ray(GLdouble x, GLdouble y);
+
 private:
 	//Calculates the front vector from the Camera's updated euler angles
 	void update_camera_vectors();
