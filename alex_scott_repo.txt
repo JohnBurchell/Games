@@ -1,0 +1,21 @@
+Hi Akex & Scott!
+
+Here's a link to a repo containing most of my game related stuff.
+
+A quick note - Last week I had a drive failure and had to scrap one of my older hard drives, unfortunately I didn't realise until I looked that it was the one that contained my working copy of
+my current version of my platformer / engine tinkering. This means that the platformer is a bit older than I would have liked. I spent quite some time on the weekend and this week trying to get
+some data off that drive but to avail (This is why you should commit and push at the same time I guess!)
+
+As another note, please find another repo here: https://github.com/JohnBurchell/Crispy-Engine/tree/master/Crispy-Engine
+This repo is going to be a small engine that I've been working on with my GF. It's not been worked on for a while (working for me, school for her) but in the future we plan to keep expanding it to learn more about OGL and other stuff.
+
+The Main Repo: https://github.com/JohnBurchell/Games
+Inside you'll find the following folders:
+
+Built - Two fully built demos of my tetris and the current version of the platformer, just extract them from the .rar files with all the dlls and you should be good to go.
+JPS_NoRecurse - A Jump Point Search implementation using A* that I did for a programming puzzle. (Sort of AI related?) Ideally I'll end up using this in the engine / platformer for pathfinding as it was pretty fast
+OGL - Some openGl test, I'll be updating this as I'm trying to add in the ability to select objects by clicking in the 2D screen (As we discussed in the interview)
+Platformer - Current version of the platformer - quite basic, missing some of the features we discussed (See above)
+Tetris - A small tetris clone - I want to add some particle effects, screen wide effects etc to the game at some point (Is this the same for you guys? Always something more you want to add / change in your games?)
+
+If you have any questions or problems, feel free to give me a ring on +46733541676 or drop me an email at john.a.burchell@gmail.com
